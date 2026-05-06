@@ -146,5 +146,10 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01";
   }
+
+  .font-display { font-family: var(--font-display); font-weight: 300; letter-spacing: 0.02em; }
+  .font-script { font-family: var(--font-script); font-weight: 500; }
 }
