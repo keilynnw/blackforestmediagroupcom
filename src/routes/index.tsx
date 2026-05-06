@@ -21,25 +21,25 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const marquee = ["Social Media Management", "Strategy-Led Approach", "Creative Direction", "Ad Management"];
+const marquee = ["Social Media Management", "Strategy-First Thinking", "Brand Storytelling", "Paid Social & Ads"];
 
 const services = [
-  { t: "Smart Marketing Strategy", d: "A clear, customized marketing plan built around how your business actually works. Messaging, positioning, audience clarity, and a roadmap built for growth." },
-  { t: "Content & Social Media", d: "Strategic content that builds trust and showcases your expertise. Ongoing planning, copywriting, optimization, and performance tracking." },
-  { t: "Ad Management", d: "Ads focused on results, not clicks. Right targeting, clear messaging, and continuous improvement paired with CRM and automations." },
-  { t: "Full-Service Marketing", d: "Your external marketing team — social, content, SEO, website updates, ad strategy, and creative direction in one place." },
+  { t: "Marketing Strategy", d: "A practical, made-to-fit plan rooted in how your business actually operates — sharper messaging, defined positioning, and a growth roadmap you can act on." },
+  { t: "Content & Social", d: "Thoughtful content that earns trust and shows off what you do best. Planning, writing, optimization, and reporting handled end-to-end." },
+  { t: "Paid Ads", d: "Campaigns built for outcomes, not vanity metrics. Sharp targeting, honest messaging, and steady iteration — wired into your CRM and automations." },
+  { t: "Fractional Marketing Team", d: "Think of us as your in-house team, on retainer — social, content, SEO, site updates, ad strategy, and creative direction under one roof." },
 ];
 
 const pillars = [
-  { n: "01", t: "Collaborative", d: "We see every project as a partnership. Strategy to execution, your brand's voice and goals stay at the center." },
-  { n: "02", t: "Creative Solutions", d: "Tailored strategies and scroll-stopping visuals designed to capture attention and set your business apart." },
-  { n: "03", t: "Clear Results", d: "Straightforward reporting and actionable insights, so you always know what's working and how you're growing." },
+  { n: "01", t: "Partnership-Led", d: "Every engagement is a collaboration. From first call to final asset, your voice and goals lead the work." },
+  { n: "02", t: "Creative That Performs", d: "Custom strategy paired with visuals that stop the scroll — built to make your brand impossible to overlook." },
+  { n: "03", t: "Honest Reporting", d: "Plain-English insights and transparent numbers, so you always know exactly what's moving the needle." },
 ];
 
 const testimonials = [
-  "Black Forest has a gift for understanding not just marketing, but people. They took the time to truly understand my business and turned all my ideas into something that finally makes sense.",
-  "Creative, patient, and fast. Every time I work with them, I feel like my business is in the hands of someone who gets both the big picture and the details that matter.",
-  "What sets them apart is how much they actually care. They listen, ask the right questions, and bring strategy to life in a way that feels effortless.",
+  "They have a rare way of seeing the person behind the business. They asked the right questions and turned scattered ideas into something that finally clicked.",
+  "Thoughtful, responsive, and genuinely fast. Every project leaves me feeling like someone's looking after both the vision and the small details.",
+  "What stands out is how much they actually care. They listen first, then build strategy that feels effortless on our end.",
 ];
 
 function Index() {
@@ -62,10 +62,10 @@ function Index() {
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 px-6 max-w-5xl">
           <h1 className="font-display text-white text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tight">
-            Boutique <em className="font-display italic text-primary">Social Media Studio</em> Supporting Brands <em className="font-display italic text-primary">Everywhere</em>
+            A Boutique <em className="font-display italic text-primary">Social Studio</em> For Brands With <em className="font-display italic text-primary">Big Plans</em>
           </h1>
           <p className="mt-8 text-white/90 max-w-xl mx-auto text-base md:text-lg leading-relaxed">
-            Helping businesses show up confidently online through strategy, social media, ads, branding, and content that converts.
+            Strategy, social, ads, brand, and content — pulled together so your business shows up online with confidence and converts the right people.
           </p>
         </div>
       </section>
@@ -88,14 +88,14 @@ function Index() {
         </div>
         <div>
           <h2 className="font-display text-4xl md:text-6xl leading-[1.05] text-accent">
-            Building a strong, <em className="italic text-primary">strategic</em> online presence for ambitious businesses.
+            Building a confident, <em className="italic text-primary">strategic</em> online presence for brands ready to grow.
           </h2>
           <div className="mt-8 h-px w-16 bg-primary" />
           <p className="mt-8 text-foreground/80 leading-relaxed">
-            Most businesses aren't struggling because they're bad at what they do — they're struggling because their marketing is unclear, inconsistent, or built without a real strategy.
+            Most businesses aren't stuck because the work isn't good — they're stuck because the marketing around it is unclear, inconsistent, or missing a real plan.
           </p>
           <p className="mt-4 text-foreground/80 leading-relaxed">
-            We focus on creating clarity, building systems, and executing marketing that actually brings in customers. From social media and ads to CRM systems and automation, everything is designed to help your business look credible, communicate clearly, and grow with intention.
+            Our job is to bring clarity, build the systems, and run the marketing that actually pulls customers in. Social, ads, CRM, automations — all designed so your brand reads as credible, communicates clearly, and grows on purpose.
           </p>
           <Link
             to="/services"
@@ -109,9 +109,9 @@ function Index() {
       {/* SERVICES LIST */}
       <section className="bg-secondary px-6 md:px-16 py-24 md:py-32">
         <div className="max-w-7xl mx-auto">
-          <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground text-center mb-6">What We Do</p>
+          <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground text-center mb-6">How We Help</p>
           <h2 className="font-display text-4xl md:text-6xl text-accent text-center max-w-3xl mx-auto leading-tight">
-            A <em className="italic text-primary">signature</em> approach to every service.
+            One <em className="italic text-primary">signature</em> standard across every offering.
           </h2>
           <div className="mt-20 grid md:grid-cols-2 gap-px bg-border">
             {services.map((s, i) => (
@@ -136,16 +136,16 @@ function Index() {
       {/* FOUNDER */}
       <section className="px-6 md:px-16 py-24 md:py-32 max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
         <div className="order-2 md:order-1">
-          <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-6">Meet The Studio</p>
+          <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-6">Inside The Studio</p>
           <h2 className="font-display text-4xl md:text-6xl text-accent leading-[1.05]">
-            <em className="italic text-primary">Hi there,</em> we're Black Forest Signature.
+            <em className="italic text-primary">Hello —</em> we're Black Forest Signature.
           </h2>
           <div className="mt-8 h-px w-16 bg-primary" />
           <p className="mt-8 text-foreground/80 leading-relaxed">
-            Black Forest Signature Marketing is the creative arm of Black Forest Media Group, LLC — a boutique studio built on story and strategy. After years of helping brands launch and scale, we've seen how many talented businesses still struggle to make sense of marketing.
+            Black Forest Signature Marketing is the creative side of Black Forest Media Group, LLC — a small studio built around story and strategy. Years of launching and scaling brands have shown us how often great businesses get tripped up by their own marketing.
           </p>
           <p className="mt-4 text-foreground/80 leading-relaxed">
-            Today, we help brands bridge that gap — building clarity, credibility, and confidence through strategy-led marketing that actually works.
+            We close that gap — building the clarity, credibility, and confidence that come from marketing led by strategy first.
           </p>
           <Link
             to="/about"
@@ -183,7 +183,7 @@ function Index() {
 
       {/* TESTIMONIALS */}
       <section className="px-6 md:px-16 py-24 md:py-32 max-w-5xl mx-auto text-center">
-        <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-12">Kind Words</p>
+        <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-12">In Their Words</p>
         <div className="grid md:grid-cols-3 gap-12">
           {testimonials.map((t, i) => (
             <blockquote key={i} className="font-display italic text-xl md:text-2xl text-accent leading-snug">
@@ -199,16 +199,16 @@ function Index() {
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 px-6 max-w-3xl">
           <h2 className="font-display text-white text-5xl md:text-7xl leading-tight">
-            Come say <em className="italic text-primary">hey!</em>
+            Let's <em className="italic text-primary">connect.</em>
           </h2>
           <p className="mt-6 text-white/90 text-lg max-w-xl mx-auto">
-            Have a project, vision, or goal for your business? Let's talk about how we can bring your ideas to life.
+            Got a project, a vision, or a goal you're chasing? Tell us where you're headed and we'll help you map the way there.
           </p>
           <Link
             to="/contact"
             className="mt-10 inline-flex items-center text-xs tracking-[0.3em] uppercase bg-background text-accent px-10 py-5 hover:bg-primary hover:text-background transition-colors"
           >
-            Start The Conversation
+            Say Hello
           </Link>
         </div>
       </section>
