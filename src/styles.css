@@ -69,8 +69,8 @@
 
 :root {
   --radius: 0.125rem;
-  --background: oklch(0.985 0.005 80);
-  --foreground: oklch(0.18 0.01 60);
+  --background: oklch(0.965 0.012 80);
+  --foreground: oklch(0.22 0.012 60);
   --card: oklch(0.97 0.008 75);
   --card-foreground: oklch(0.18 0.01 60);
   --popover: oklch(1 0 0);
@@ -147,9 +147,17 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01";
   }
 
-  .font-display { font-family: var(--font-display); font-weight: 300; letter-spacing: 0.02em; }
+  .font-display { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; }
+  .font-display em, em.font-display { font-style: italic; font-family: var(--font-display); }
   .font-script { font-family: var(--font-script); font-weight: 500; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
 }
