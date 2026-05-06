@@ -109,9 +109,9 @@ function Index() {
       {/* SERVICES LIST */}
       <section className="bg-secondary px-6 md:px-16 py-24 md:py-32">
         <div className="max-w-7xl mx-auto">
-          <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground text-center mb-6">What We Do</p>
+          <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground text-center mb-6">How We Help</p>
           <h2 className="font-display text-4xl md:text-6xl text-accent text-center max-w-3xl mx-auto leading-tight">
-            A <em className="italic text-primary">signature</em> approach to every service.
+            One <em className="italic text-primary">signature</em> standard across every offering.
           </h2>
           <div className="mt-20 grid md:grid-cols-2 gap-px bg-border">
             {services.map((s, i) => (
