@@ -88,14 +88,14 @@ function Index() {
         </div>
         <div>
           <h2 className="font-display text-4xl md:text-6xl leading-[1.05] text-accent">
-            Building a strong, <em className="italic text-primary">strategic</em> online presence for ambitious businesses.
+            Building a confident, <em className="italic text-primary">strategic</em> online presence for brands ready to grow.
           </h2>
           <div className="mt-8 h-px w-16 bg-primary" />
           <p className="mt-8 text-foreground/80 leading-relaxed">
-            Most businesses aren't struggling because they're bad at what they do — they're struggling because their marketing is unclear, inconsistent, or built without a real strategy.
+            Most businesses aren't stuck because the work isn't good — they're stuck because the marketing around it is unclear, inconsistent, or missing a real plan.
           </p>
           <p className="mt-4 text-foreground/80 leading-relaxed">
-            We focus on creating clarity, building systems, and executing marketing that actually brings in customers. From social media and ads to CRM systems and automation, everything is designed to help your business look credible, communicate clearly, and grow with intention.
+            Our job is to bring clarity, build the systems, and run the marketing that actually pulls customers in. Social, ads, CRM, automations — all designed so your brand reads as credible, communicates clearly, and grows on purpose.
           </p>
           <Link
             to="/services"
