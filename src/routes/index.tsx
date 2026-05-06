@@ -199,16 +199,16 @@ function Index() {
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 px-6 max-w-3xl">
           <h2 className="font-display text-white text-5xl md:text-7xl leading-tight">
-            Come say <em className="italic text-primary">hey!</em>
+            Let's <em className="italic text-primary">connect.</em>
           </h2>
           <p className="mt-6 text-white/90 text-lg max-w-xl mx-auto">
-            Have a project, vision, or goal for your business? Let's talk about how we can bring your ideas to life.
+            Got a project, a vision, or a goal you're chasing? Tell us where you're headed and we'll help you map the way there.
           </p>
           <Link
             to="/contact"
             className="mt-10 inline-flex items-center text-xs tracking-[0.3em] uppercase bg-background text-accent px-10 py-5 hover:bg-primary hover:text-background transition-colors"
           >
-            Start The Conversation
+            Say Hello
           </Link>
         </div>
       </section>
