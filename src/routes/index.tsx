@@ -48,7 +48,7 @@ function Index() {
       <SiteHeader hideLogo />
 
       {/* LOGO BANNER */}
-      <section className="relative w-full bg-background flex items-center justify-center px-2 sm:px-4 pt-20 sm:pt-24 pb-2 sm:pb-4">
+      <section className="relative w-full bg-background flex items-center justify-center px-2 sm:px-4 pt-7 sm:pt-8 pb-1">
         <img
           src={logo}
           alt="Black Forest Signature Marketing"
