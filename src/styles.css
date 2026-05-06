@@ -61,10 +61,16 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@theme inline {
+  --font-display: "Cormorant Garamond", serif;
+  --font-script: "Dancing Script", cursive;
+  --font-sans: "Inter", sans-serif;
+}
+
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 0.125rem;
+  --background: oklch(0.985 0.005 80);
+  --foreground: oklch(0.18 0.01 60);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
