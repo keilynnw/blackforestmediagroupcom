@@ -136,16 +136,16 @@ function Index() {
       {/* FOUNDER */}
       <section className="px-6 md:px-16 py-24 md:py-32 max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
         <div className="order-2 md:order-1">
-          <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-6">Meet The Studio</p>
+          <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-6">Inside The Studio</p>
           <h2 className="font-display text-4xl md:text-6xl text-accent leading-[1.05]">
-            <em className="italic text-primary">Hi there,</em> we're Black Forest Signature.
+            <em className="italic text-primary">Hello —</em> we're Black Forest Signature.
           </h2>
           <div className="mt-8 h-px w-16 bg-primary" />
           <p className="mt-8 text-foreground/80 leading-relaxed">
-            Black Forest Signature Marketing is the creative arm of Black Forest Media Group, LLC — a boutique studio built on story and strategy. After years of helping brands launch and scale, we've seen how many talented businesses still struggle to make sense of marketing.
+            Black Forest Signature Marketing is the creative side of Black Forest Media Group, LLC — a small studio built around story and strategy. Years of launching and scaling brands have shown us how often great businesses get tripped up by their own marketing.
           </p>
           <p className="mt-4 text-foreground/80 leading-relaxed">
-            Today, we help brands bridge that gap — building clarity, credibility, and confidence through strategy-led marketing that actually works.
+            We close that gap — building the clarity, credibility, and confidence that come from marketing led by strategy first.
           </p>
           <Link
             to="/about"
