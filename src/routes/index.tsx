@@ -21,25 +21,25 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const marquee = ["Social Media Management", "Strategy-Led Approach", "Creative Direction", "Ad Management"];
+const marquee = ["Social Media Management", "Strategy-First Thinking", "Brand Storytelling", "Paid Social & Ads"];
 
 const services = [
-  { t: "Smart Marketing Strategy", d: "A clear, customized marketing plan built around how your business actually works. Messaging, positioning, audience clarity, and a roadmap built for growth." },
-  { t: "Content & Social Media", d: "Strategic content that builds trust and showcases your expertise. Ongoing planning, copywriting, optimization, and performance tracking." },
-  { t: "Ad Management", d: "Ads focused on results, not clicks. Right targeting, clear messaging, and continuous improvement paired with CRM and automations." },
-  { t: "Full-Service Marketing", d: "Your external marketing team — social, content, SEO, website updates, ad strategy, and creative direction in one place." },
+  { t: "Marketing Strategy", d: "A practical, made-to-fit plan rooted in how your business actually operates — sharper messaging, defined positioning, and a growth roadmap you can act on." },
+  { t: "Content & Social", d: "Thoughtful content that earns trust and shows off what you do best. Planning, writing, optimization, and reporting handled end-to-end." },
+  { t: "Paid Ads", d: "Campaigns built for outcomes, not vanity metrics. Sharp targeting, honest messaging, and steady iteration — wired into your CRM and automations." },
+  { t: "Fractional Marketing Team", d: "Think of us as your in-house team, on retainer — social, content, SEO, site updates, ad strategy, and creative direction under one roof." },
 ];
 
 const pillars = [
-  { n: "01", t: "Collaborative", d: "We see every project as a partnership. Strategy to execution, your brand's voice and goals stay at the center." },
-  { n: "02", t: "Creative Solutions", d: "Tailored strategies and scroll-stopping visuals designed to capture attention and set your business apart." },
-  { n: "03", t: "Clear Results", d: "Straightforward reporting and actionable insights, so you always know what's working and how you're growing." },
+  { n: "01", t: "Partnership-Led", d: "Every engagement is a collaboration. From first call to final asset, your voice and goals lead the work." },
+  { n: "02", t: "Creative That Performs", d: "Custom strategy paired with visuals that stop the scroll — built to make your brand impossible to overlook." },
+  { n: "03", t: "Honest Reporting", d: "Plain-English insights and transparent numbers, so you always know exactly what's moving the needle." },
 ];
 
 const testimonials = [
-  "Black Forest has a gift for understanding not just marketing, but people. They took the time to truly understand my business and turned all my ideas into something that finally makes sense.",
-  "Creative, patient, and fast. Every time I work with them, I feel like my business is in the hands of someone who gets both the big picture and the details that matter.",
-  "What sets them apart is how much they actually care. They listen, ask the right questions, and bring strategy to life in a way that feels effortless.",
+  "They have a rare way of seeing the person behind the business. They asked the right questions and turned scattered ideas into something that finally clicked.",
+  "Thoughtful, responsive, and genuinely fast. Every project leaves me feeling like someone's looking after both the vision and the small details.",
+  "What stands out is how much they actually care. They listen first, then build strategy that feels effortless on our end.",
 ];
 
 function Index() {
