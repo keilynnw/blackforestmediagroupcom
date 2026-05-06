@@ -52,7 +52,7 @@ function Index() {
         <img
           src={logo}
           alt="Black Forest Signature Marketing"
-          className="block mx-auto w-full max-w-[min(92vw,1100px)] h-auto object-contain"
+          className="block mx-auto w-full max-w-[min(37vw,440px)] h-auto object-contain"
         />
       </section>
 
