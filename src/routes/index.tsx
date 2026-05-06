@@ -62,10 +62,10 @@ function Index() {
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 px-6 max-w-5xl">
           <h1 className="font-display text-white text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tight">
-            Boutique <em className="font-display italic text-primary">Social Media Studio</em> Supporting Brands <em className="font-display italic text-primary">Everywhere</em>
+            A Boutique <em className="font-display italic text-primary">Social Studio</em> For Brands With <em className="font-display italic text-primary">Big Plans</em>
           </h1>
           <p className="mt-8 text-white/90 max-w-xl mx-auto text-base md:text-lg leading-relaxed">
-            Helping businesses show up confidently online through strategy, social media, ads, branding, and content that converts.
+            Strategy, social, ads, brand, and content — pulled together so your business shows up online with confidence and converts the right people.
           </p>
         </div>
       </section>
