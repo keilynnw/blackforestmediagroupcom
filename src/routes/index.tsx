@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import logo from "@/assets/logo.png";
 import hero from "@/assets/hero.jpg";
 import laptop from "@/assets/section-laptop.jpg";
 import founder from "@/assets/founder.jpg";
@@ -44,10 +45,19 @@ const testimonials = [
 function Index() {
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader hideLogo />
+
+      {/* LOGO BANNER — first third of the page */}
+      <section className="relative min-h-[33vh] md:min-h-[33vh] flex items-center justify-center bg-background px-6 pt-24 pb-12">
+        <img
+          src={logo}
+          alt="Black Forest Signature Marketing"
+          className="w-full max-w-5xl h-auto object-contain"
+        />
+      </section>
 
       {/* HERO */}
-      <section className="relative min-h-[100svh] flex items-center justify-center text-center overflow-hidden">
+      <section className="relative min-h-[67vh] flex items-center justify-center text-center overflow-hidden">
         <img src={hero} alt="Editorial workspace" className="absolute inset-0 w-full h-full object-cover" width={1920} height={1280} />
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 px-6 max-w-5xl">
