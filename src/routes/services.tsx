@@ -16,22 +16,25 @@ export const Route = createFileRoute("/services")({
 
 const packages = [
   {
-    name: "The Essential",
+    name: "Trail",
     tag: "Foundation",
-    price: "Starting $1,800/mo",
+    price: "$749/mo",
+    blurb: "A refined, reliable social presence that keeps your brand visible, polished, and effortlessly on-brand.",
     items: ["12 curated posts monthly", "8 reels or stories", "Caption + hashtag strategy", "Monthly analytics report"],
   },
   {
-    name: "The Signature",
-    tag: "Most Loved",
-    price: "Starting $3,200/mo",
-    items: ["20 curated posts monthly", "16 reels with editing", "Daily community management", "Quarterly content shoot", "Bi-weekly strategy calls"],
+    name: "Ridge",
+    tag: "Community Focused",
+    price: "$1,497/mo",
+    blurb: "Elevated social management with hands-on community care that turns followers into a warm, engaged audience.",
+    items: ["16 curated posts monthly", "12 reels or stories", "Daily community management", "Caption + hashtag strategy", "Monthly analytics report"],
   },
   {
-    name: "The Atelier",
-    tag: "Full Service",
-    price: "By Application",
-    items: ["Unlimited content production", "Full brand storytelling", "Email + blog integration", "Dedicated account director", "On-site monthly shoots"],
+    name: "Summit",
+    tag: "Signature — Most Loved",
+    price: "$2,997/mo",
+    blurb: "Our signature, fully managed social media partnership — strategy, content, and performance handled end-to-end for brands ready to lead.",
+    items: ["20 curated posts monthly", "16 reels with editing", "Daily community management", "Quarterly content shoot", "Bi-weekly strategy calls"],
   },
 ];
 
@@ -52,7 +55,8 @@ function Services() {
             <div key={p.name} className="bg-background p-10 flex flex-col">
               <p className="text-xs tracking-[0.3em] uppercase text-primary mb-6">{p.tag}</p>
               <h3 className="font-display text-3xl text-accent">{p.name}</h3>
-              <p className="text-sm text-muted-foreground mt-2 mb-8">{p.price}</p>
+              <p className="text-sm text-muted-foreground mt-2">{p.price}</p>
+              <p className="text-sm text-foreground/75 mt-4 mb-8 leading-relaxed">{p.blurb}</p>
               <ul className="space-y-3 flex-1">
                 {p.items.map((i) => (
                   <li key={i} className="text-sm text-foreground/80 border-b border-border pb-3">— {i}</li>
