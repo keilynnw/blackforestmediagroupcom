@@ -181,18 +181,6 @@ function Index() {
         ))}
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="px-6 md:px-16 py-24 md:py-32 max-w-5xl mx-auto text-center">
-        <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-12">In Their Words</p>
-        <div className="grid md:grid-cols-3 gap-12">
-          {testimonials.map((t, i) => (
-            <blockquote key={i} className="font-display italic text-xl md:text-2xl text-accent leading-snug">
-              "{t}"
-            </blockquote>
-          ))}
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="relative min-h-[80vh] flex items-center justify-center text-center overflow-hidden">
         <img src={hero} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" width={1920} height={1280} />
