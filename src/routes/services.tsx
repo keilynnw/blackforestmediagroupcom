@@ -55,7 +55,8 @@ function Services() {
             <div key={p.name} className="bg-background p-10 flex flex-col">
               <p className="text-xs tracking-[0.3em] uppercase text-primary mb-6">{p.tag}</p>
               <h3 className="font-display text-3xl text-accent">{p.name}</h3>
-              <p className="text-sm text-muted-foreground mt-2 mb-8">{p.price}</p>
+              <p className="text-sm text-muted-foreground mt-2">{p.price}</p>
+              <p className="text-sm text-foreground/75 mt-4 mb-8 leading-relaxed">{p.blurb}</p>
               <ul className="space-y-3 flex-1">
                 {p.items.map((i) => (
                   <li key={i} className="text-sm text-foreground/80 border-b border-border pb-3">— {i}</li>
