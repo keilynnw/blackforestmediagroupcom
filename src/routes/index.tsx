@@ -62,7 +62,7 @@ function Index() {
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 px-6 max-w-5xl">
           <h1 className="font-display text-white text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tight">
-            A Boutique <em className="font-display italic text-primary">Social Studio</em> For Brands With <em className="font-display italic text-primary">Big Plans</em>
+            A Boutique <em className="font-display italic text-primary text-slate-950">Social Studio</em> For Brands With <em className="font-display italic text-primary text-slate-950">Big Plans</em>
           </h1>
           <p className="mt-8 text-white/90 max-w-xl mx-auto text-base md:text-lg leading-relaxed">
             Strategy, social, ads, brand, and content — pulled together so your business shows up online with confidence and converts the right people.
@@ -88,7 +88,7 @@ function Index() {
         </div>
         <div>
           <h2 className="font-display text-4xl md:text-6xl leading-[1.05] text-accent">
-            Building a confident, <em className="italic text-primary">strategic</em> online presence for brands ready to grow.
+            Building a confident, <em className="italic text-primary text-slate-950">strategic</em> online presence for brands ready to grow.
           </h2>
           <div className="mt-8 h-px w-16 bg-primary" />
           <p className="mt-8 text-foreground/80 leading-relaxed">
@@ -111,12 +111,12 @@ function Index() {
         <div className="max-w-7xl mx-auto">
           <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground text-center mb-6">How We Help</p>
           <h2 className="font-display text-4xl md:text-6xl text-accent text-center max-w-3xl mx-auto leading-tight">
-            One <em className="italic text-primary">signature</em> standard across every offering.
+            One <em className="italic text-primary text-slate-950">signature</em> standard across every offering.
           </h2>
           <div className="mt-20 grid md:grid-cols-2 gap-px bg-border">
             {services.map((s, i) => (
               <div key={s.t} className="bg-secondary p-10 md:p-14">
-                <p className="font-display italic text-primary text-2xl mb-6">— 0{i + 1}</p>
+                <p className="font-display italic text-primary text-slate-950 text-2xl mb-6">— 0{i + 1}</p>
                 <h3 className="font-display text-3xl md:text-4xl text-accent mb-5">{s.t}</h3>
                 <p className="text-foreground/75 leading-relaxed">{s.d}</p>
               </div>
@@ -138,7 +138,7 @@ function Index() {
         <div className="order-2 md:order-1">
           <p className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-6">Inside The Studio</p>
           <h2 className="font-display text-4xl md:text-6xl text-accent leading-[1.05]">
-            <em className="italic text-primary">Hello —</em> we're Black Forest Signature.
+            <em className="italic text-primary text-slate-950">Hello —</em> we're Black Forest Signature.
           </h2>
           <div className="mt-8 h-px w-16 bg-primary" />
           <p className="mt-8 text-foreground/80 leading-relaxed">
@@ -164,7 +164,7 @@ function Index() {
         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 md:gap-16">
           {pillars.map((p) => (
             <div key={p.n}>
-              <p className="font-display italic text-primary text-3xl mb-6">{p.n}</p>
+              <p className="font-display italic text-primary text-slate-950 text-3xl mb-6">{p.n}</p>
               <p className="text-background/80 leading-relaxed mb-8">{p.d}</p>
               <h3 className="font-display text-3xl md:text-4xl text-background">{p.t}</h3>
             </div>
@@ -199,7 +199,7 @@ function Index() {
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 px-6 max-w-3xl">
           <h2 className="font-display text-white text-5xl md:text-7xl leading-tight">
-            Let's <em className="italic text-primary">connect.</em>
+            Let's <em className="italic text-primary text-slate-950">connect.</em>
           </h2>
           <p className="mt-6 text-white/90 text-lg max-w-xl mx-auto">
             Got a project, a vision, or a goal you're chasing? Tell us where you're headed and we'll help you map the way there.
