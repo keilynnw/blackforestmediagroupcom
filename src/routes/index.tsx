@@ -164,7 +164,7 @@ function Index() {
         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 md:gap-16">
           {pillars.map((p) => (
             <div key={p.n}>
-              <p className="font-display italic text-primary text-slate-950 text-3xl mb-6">{p.n}</p>
+              <p className="font-display italic text-primary text-3xl mb-6 text-slate-50">{p.n}</p>
               <p className="text-background/80 leading-relaxed mb-8">{p.d}</p>
               <h3 className="font-display text-3xl md:text-4xl text-background">{p.t}</h3>
             </div>
