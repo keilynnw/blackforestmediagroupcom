@@ -34,7 +34,7 @@ const packages = [
     tag: "Signature — Most Loved",
     price: "$2,997/mo",
     blurb: "Our signature, fully managed social media partnership — strategy, content, and performance handled end-to-end for brands ready to lead.",
-    items: ["20 curated posts monthly", "16 reels with editing", "Daily community management", "Quarterly content shoot", "Bi-weekly strategy calls"],
+    items: ["20 curated posts monthly", "16 reels with editing", "Daily community management", "Monthly content shoot", "Bi-weekly strategy calls"],
   },
 ];
 
