@@ -22,7 +22,7 @@ export function SiteFooter() {
         </div>
         <div>
           <p className="text-xs tracking-[0.3em] uppercase text-primary mb-4">Contact</p>
-          <p className="text-sm text-accent-foreground/70">hello@blackforestsignature.com</p>
+          <p className="text-sm text-accent-foreground/70">marketing@blackforestmediagroup.com</p>
           <p className="text-sm text-accent-foreground/70 mt-1">By appointment only</p>
         </div>
       </div>
