@@ -9,7 +9,7 @@ export function SiteFooter() {
           <p className="font-script text-xl -mt-1">Signature</p>
           <p className="text-xs tracking-[0.3em] uppercase mt-2 text-accent-foreground/60">Marketing</p>
           <p className="mt-6 text-sm text-accent-foreground/70 max-w-xs">
-            Black Forest Media Group, LLC dba Black Forest Signature Marketing.
+            marketing@blackforestmediagroup.com
           </p>
         </div>
         <div>
