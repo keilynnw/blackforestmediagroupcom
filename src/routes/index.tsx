@@ -142,10 +142,10 @@ function Index() {
           </h2>
           <div className="mt-8 h-px w-16 bg-primary" />
           <p className="mt-8 text-foreground/80 leading-relaxed">
-            Black Forest Signature Marketing is the creative side of Black Forest Media Group, LLC — a small studio built around story and strategy. Years of launching and scaling brands have shown us how often great businesses get tripped up by their own marketing.
+            Black Forest Signature Marketing is the creative arm of Black Forest Media Group, LLC — a fresh, boutique studio built around story, strategy, and a deep love for the craft. We're new by design: nimble, hands-on, and fully invested in every brand we take on.
           </p>
           <p className="mt-4 text-foreground/80 leading-relaxed">
-            We close that gap — building the clarity, credibility, and confidence that come from marketing led by strategy first.
+            Our approach blends elevated creative with sharp strategy — closing the gap between a great business and the marketing that finally does it justice.
           </p>
           <Link
             to="/about"
