@@ -56,7 +56,7 @@ function Contact() {
           ))}
           <div>
             <label className="block text-xs tracking-[0.3em] uppercase text-muted-foreground mb-3">Tell us about your vision</label>
-            <textarea required rows={5} className="w-full bg-transparent border-b border-accent/40 py-3 focus:border-accent outline-none text-accent resize-none" />
+            <textarea required rows={5} name="vision" className="w-full bg-transparent border-b border-accent/40 py-3 focus:border-accent outline-none text-accent resize-none" />
           </div>
           <button className="w-full bg-accent text-accent-foreground text-xs tracking-[0.3em] uppercase py-5 hover:bg-accent/90 transition-colors">
             Send Inquiry
