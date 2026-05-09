@@ -41,7 +41,7 @@ function Contact() {
             const body = encodeURIComponent(
               `Name: ${name}\nEmail: ${email}\nBrand / Business: ${brand}\n\nVision:\n${vision}`
             );
-            window.location.href = `mailto:photos@blackforestmediagroup.com?subject=${subject}&body=${body}`;
+            window.location.href = `mailto:notify@blackforestmediagroup.com?subject=${subject}&body=${body}`;
           }}
         >
           {[
