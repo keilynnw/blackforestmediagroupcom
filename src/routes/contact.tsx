@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -15,6 +17,8 @@ export const Route = createFileRoute("/contact")({
 });
 
 function Contact() {
+  const [submitting, setSubmitting] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -29,19 +33,31 @@ function Contact() {
 
         <form
           className="mt-16 space-y-8"
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
             const form = e.currentTarget;
             const data = new FormData(form);
-            const name = String(data.get("name") || "");
-            const email = String(data.get("email") || "");
-            const brand = String(data.get("brand") || "");
-            const vision = String(data.get("vision") || "");
-            const subject = encodeURIComponent(`New inquiry from ${name}`);
-            const body = encodeURIComponent(
-              `Name: ${name}\nEmail: ${email}\nBrand / Business: ${brand}\n\nVision:\n${vision}`
-            );
-            window.location.href = `mailto:notify@blackforestmediagroup.com?subject=${subject}&body=${body}`;
+            const payload = {
+              name: String(data.get("name") || ""),
+              email: String(data.get("email") || ""),
+              brand: String(data.get("brand") || ""),
+              vision: String(data.get("vision") || ""),
+            };
+            setSubmitting(true);
+            try {
+              const res = await fetch("/api/public/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              });
+              if (!res.ok) throw new Error("Failed");
+              toast.success("Thank you — we'll be in touch within two business days.");
+              form.reset();
+            } catch {
+              toast.error("Something went wrong. Please try again or email us directly.");
+            } finally {
+              setSubmitting(false);
+            }
           }}
         >
           {[
@@ -58,8 +74,8 @@ function Contact() {
             <label className="block text-xs tracking-[0.3em] uppercase text-muted-foreground mb-3">Tell us about your vision</label>
             <textarea required rows={5} name="vision" className="w-full bg-transparent border-b border-accent/40 py-3 focus:border-accent outline-none text-accent resize-none" />
           </div>
-          <button className="w-full bg-accent text-accent-foreground text-xs tracking-[0.3em] uppercase py-5 hover:bg-accent/90 transition-colors">
-            Send Inquiry
+          <button disabled={submitting} className="w-full bg-accent text-accent-foreground text-xs tracking-[0.3em] uppercase py-5 hover:bg-accent/90 transition-colors disabled:opacity-50">
+            {submitting ? "Sending…" : "Send Inquiry"}
           </button>
         </form>
       </section>
