@@ -31,7 +31,17 @@ function Contact() {
           className="mt-16 space-y-8"
           onSubmit={(e) => {
             e.preventDefault();
-            alert("Thank you — we'll be in touch within two business days.");
+            const form = e.currentTarget;
+            const data = new FormData(form);
+            const name = String(data.get("name") || "");
+            const email = String(data.get("email") || "");
+            const brand = String(data.get("brand") || "");
+            const vision = String(data.get("vision") || "");
+            const subject = encodeURIComponent(`New inquiry from ${name}`);
+            const body = encodeURIComponent(
+              `Name: ${name}\nEmail: ${email}\nBrand / Business: ${brand}\n\nVision:\n${vision}`
+            );
+            window.location.href = `mailto:marketing@blackforestmediagroup.com?subject=${subject}&body=${body}`;
           }}
         >
           {[
