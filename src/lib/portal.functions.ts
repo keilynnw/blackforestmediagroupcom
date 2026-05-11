@@ -195,7 +195,7 @@ export const createProject = createServerFn({ method: "POST" })
     z.object({
       title: z.string().trim().min(1).max(200),
       description: z.string().trim().max(2000).optional(),
-      clientId: z.string().uuid(),
+      clientId: z.string().uuid().optional().nullable(),
     }),
   )
   .handler(async ({ data, context }) => {
@@ -205,7 +205,7 @@ export const createProject = createServerFn({ method: "POST" })
       .insert({
         title: data.title,
         description: data.description ?? null,
-        client_id: data.clientId,
+        client_id: data.clientId ?? null,
         created_by: context.userId,
       })
       .select()
