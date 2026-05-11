@@ -24,6 +24,7 @@ import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated.admin.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
+import { Route as AuthenticatedPortalSettingsRouteImport } from './routes/_authenticated.portal.settings'
 import { Route as AuthenticatedAdminClientsRouteImport } from './routes/_authenticated.admin.clients'
 import { Route as AuthenticatedAdminProjectsIndexRouteImport } from './routes/_authenticated.admin.projects.index'
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
@@ -107,6 +108,12 @@ const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
   path: '/api/public/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedPortalSettingsRoute =
+  AuthenticatedPortalSettingsRouteImport.update({
+    id: '/portal/settings',
+    path: '/portal/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminClientsRoute =
   AuthenticatedAdminClientsRouteImport.update({
     id: '/clients',
@@ -162,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/portal/login': typeof PortalLoginRoute
   '/portal/reset-password': typeof PortalResetPasswordRoute
   '/admin/clients': typeof AuthenticatedAdminClientsRoute
+  '/portal/settings': typeof AuthenticatedPortalSettingsRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -184,6 +192,7 @@ export interface FileRoutesByTo {
   '/portal/login': typeof PortalLoginRoute
   '/portal/reset-password': typeof PortalResetPasswordRoute
   '/admin/clients': typeof AuthenticatedAdminClientsRoute
+  '/portal/settings': typeof AuthenticatedPortalSettingsRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -209,6 +218,7 @@ export interface FileRoutesById {
   '/portal/login': typeof PortalLoginRoute
   '/portal/reset-password': typeof PortalResetPasswordRoute
   '/_authenticated/admin/clients': typeof AuthenticatedAdminClientsRoute
+  '/_authenticated/portal/settings': typeof AuthenticatedPortalSettingsRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -234,6 +244,7 @@ export interface FileRouteTypes {
     | '/portal/login'
     | '/portal/reset-password'
     | '/admin/clients'
+    | '/portal/settings'
     | '/api/public/contact'
     | '/lovable/email/suppression'
     | '/admin/'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/portal/login'
     | '/portal/reset-password'
     | '/admin/clients'
+    | '/portal/settings'
     | '/api/public/contact'
     | '/lovable/email/suppression'
     | '/admin'
@@ -280,6 +292,7 @@ export interface FileRouteTypes {
     | '/portal/login'
     | '/portal/reset-password'
     | '/_authenticated/admin/clients'
+    | '/_authenticated/portal/settings'
     | '/api/public/contact'
     | '/lovable/email/suppression'
     | '/_authenticated/admin/'
@@ -417,6 +430,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/portal/settings': {
+      id: '/_authenticated/portal/settings'
+      path: '/portal/settings'
+      fullPath: '/portal/settings'
+      preLoaderRoute: typeof AuthenticatedPortalSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/clients': {
       id: '/_authenticated/admin/clients'
       path: '/clients'
@@ -488,12 +508,14 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedPortalSettingsRoute: typeof AuthenticatedPortalSettingsRoute
   AuthenticatedPortalIndexRoute: typeof AuthenticatedPortalIndexRoute
   AuthenticatedPortalProjectsIdRoute: typeof AuthenticatedPortalProjectsIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedPortalSettingsRoute: AuthenticatedPortalSettingsRoute,
   AuthenticatedPortalIndexRoute: AuthenticatedPortalIndexRoute,
   AuthenticatedPortalProjectsIdRoute: AuthenticatedPortalProjectsIdRoute,
 }

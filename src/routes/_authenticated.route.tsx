@@ -31,6 +31,9 @@ function AuthLayout() {
             <Link to="/portal" activeOptions={{ exact: true }} activeProps={{ className: "text-accent" }} className="text-foreground/70 hover:text-foreground">
               My Projects
             </Link>
+            <Link to="/portal/settings" activeProps={{ className: "text-accent" }} className="text-foreground/70 hover:text-foreground">
+              Settings
+            </Link>
             {isAdmin && (
               <Link to="/admin" activeProps={{ className: "text-accent" }} className="text-foreground/70 hover:text-foreground">
                 Admin
