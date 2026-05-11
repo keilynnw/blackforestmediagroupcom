@@ -144,6 +144,7 @@ export const createClient = createServerFn({ method: "POST" })
       displayName: z.string().trim().min(1).max(100),
       company: z.string().trim().max(150).optional().nullable(),
       email: z.string().trim().email().max(255).optional().nullable(),
+      password: z.string().min(8).max(200).optional().nullable(),
     }),
   )
   .handler(async ({ data, context }) => {
@@ -153,10 +154,11 @@ export const createClient = createServerFn({ method: "POST" })
       data.email?.toLowerCase().trim() ||
       `client+${crypto.randomUUID().slice(0, 8)}@placeholder.blackforestmediagroup.com`;
 
-    // Create auth user (no password — admin can send invite/reset later)
+    // Create auth user. If a password is provided, the client can log in immediately.
     const { data: created, error: userErr } =
       await supabaseAdmin.auth.admin.createUser({
         email,
+        password: data.password || undefined,
         email_confirm: true,
         user_metadata: { display_name: data.displayName },
       });
@@ -185,6 +187,7 @@ export const createClient = createServerFn({ method: "POST" })
         id: userId,
         display_name: data.displayName,
         company: data.company?.trim() || null,
+        email,
         created_at: new Date().toISOString(),
       },
     };
