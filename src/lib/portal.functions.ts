@@ -205,7 +205,54 @@ export const listClients = createServerFn({ method: "GET" })
       .from("profiles")
       .select("id, display_name, company, created_at")
       .in("id", clientIds);
-    return { clients: profiles ?? [] };
+
+    // Fetch emails from auth.users (paginated)
+    const emailMap = new Map<string, string>();
+    let page = 1;
+    while (page < 20) {
+      const { data: usersPage, error: uErr } =
+        await supabaseAdmin.auth.admin.listUsers({ page, perPage: 200 });
+      if (uErr) break;
+      for (const u of usersPage.users) {
+        if (u.email) emailMap.set(u.id, u.email);
+      }
+      if (usersPage.users.length < 200) break;
+      page++;
+    }
+
+    return {
+      clients: (profiles ?? []).map((p: any) => ({
+        ...p,
+        email: emailMap.get(p.id) ?? null,
+      })),
+    };
+  });
+
+export const updateClientCredentials = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    z.object({
+      userId: z.string().uuid(),
+      email: z.string().trim().email().max(255).optional(),
+      password: z.string().min(8).max(200).optional(),
+    }).refine((v) => v.email || v.password, {
+      message: "Provide an email or password to update",
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const updates: { email?: string; password?: string; email_confirm?: boolean } = {};
+    if (data.email) {
+      updates.email = data.email.toLowerCase();
+      updates.email_confirm = true;
+    }
+    if (data.password) updates.password = data.password;
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(
+      data.userId,
+      updates,
+    );
+    if (error) throw new Error(error.message);
+    return { ok: true };
   });
 
 // ===== Projects =====
