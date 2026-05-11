@@ -21,6 +21,7 @@ export function SiteHeader({ hideLogo = false }: { hideLogo?: boolean }) {
         <div className="hidden md:flex items-center gap-10 text-xs tracking-[0.25em] uppercase text-foreground/80 justify-self-end">
           <Link to="/about" activeProps={{ className: "text-accent" }}>About</Link>
           <Link to="/contact" activeProps={{ className: "text-accent" }}>Contact</Link>
+          <Link to="/portal" className="text-foreground/60 hover:text-accent">Client Login</Link>
           <Link
             to="/contact"
             className="inline-flex items-center border border-accent/40 px-5 py-3 hover:bg-accent hover:text-accent-foreground transition-colors"
