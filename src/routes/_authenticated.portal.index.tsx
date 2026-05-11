@@ -19,6 +19,7 @@ function PortalHome() {
     queryKey: ["my-projects"],
     queryFn: () => fetchProjects(),
   });
+  const projects = data?.projects ?? [];
 
   return (
     <div>
@@ -26,14 +27,14 @@ function PortalHome() {
       <h1 className="font-display text-4xl md:text-5xl text-accent mb-10">Projects</h1>
 
       {isLoading && <p className="text-muted-foreground">Loading…</p>}
-      {!isLoading && (data?.projects.length ?? 0) === 0 && (
+      {!isLoading && projects.length === 0 && (
         <p className="text-muted-foreground border border-border/40 p-10 text-center">
           No projects yet. We'll add your first project here once it's set up.
         </p>
       )}
 
       <div className="grid gap-4 md:grid-cols-2">
-        {(data?.projects ?? []).map((p: any) => (
+        {projects.map((p: any) => (
           <Link
             key={p.id}
             to="/portal/projects/$id"

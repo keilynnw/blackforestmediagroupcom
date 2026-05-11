@@ -95,7 +95,9 @@ function AdminProjectDetail() {
   if (isLoading) return <p className="text-muted-foreground">Loading…</p>;
   if (!data) return <p className="text-muted-foreground">Project not found.</p>;
 
-  const { project, assets, messages, client } = data as any;
+  const { project, client } = data as any;
+  const assets = (data as any).assets ?? [];
+  const messages = (data as any).messages ?? [];
 
   return (
     <div className="space-y-12">
