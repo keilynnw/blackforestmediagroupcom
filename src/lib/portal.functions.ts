@@ -223,6 +223,7 @@ export const updateProject = createServerFn({ method: "POST" })
       description: z.string().trim().max(2000).optional(),
       status: z.enum(["active", "paused", "completed"]).optional(),
       clientId: z.string().uuid().nullable().optional(),
+      strategy: z.string().max(50000).nullable().optional(),
     }),
   )
   .handler(async ({ data, context }) => {

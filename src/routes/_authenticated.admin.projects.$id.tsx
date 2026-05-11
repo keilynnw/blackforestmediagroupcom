@@ -14,6 +14,7 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { ContentCalendar } from "@/components/content-calendar";
+import { StrategyPanel } from "@/components/strategy-panel";
 
 export const Route = createFileRoute("/_authenticated/admin/projects/$id")({
   component: AdminProjectDetail,
@@ -43,6 +44,7 @@ function AdminProjectDetail() {
   const [body, setBody] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [tab, setTab] = useState<"strategy" | "calendar" | "files" | "messages">("strategy");
 
   const sendMut = useMutation({
     mutationFn: () => sendMsg({ data: { projectId: id, body } }),
@@ -164,94 +166,125 @@ function AdminProjectDetail() {
         )}
       </div>
 
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground">Files</h2>
-          <label className="text-xs tracking-[0.3em] uppercase border border-accent/40 px-4 py-2 cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors">
-            {uploading ? "Uploading…" : "+ Upload"}
-            <input
-              ref={fileRef}
-              type="file"
-              className="hidden"
-              disabled={uploading}
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) handleFile(f);
-              }}
-            />
-          </label>
-        </div>
-        {assets.length === 0 ? (
-          <p className="text-sm text-muted-foreground border border-border/40 p-6">No files yet.</p>
-        ) : (
-          <ul className="border border-border/40 divide-y divide-border/40">
-            {assets.map((a: any) => (
-              <li key={a.id} className="flex items-center justify-between p-4">
-                <div>
-                  <p className="text-foreground">{a.label ?? a.storage_path.split("/").pop()}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {a.file_type ?? "file"}
-                    {a.file_size ? ` · ${(a.file_size / 1024).toFixed(0)} KB` : ""}
-                    {" · "}{new Date(a.created_at).toLocaleDateString()}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleDownload(a.id)}
-                  className="text-xs tracking-[0.3em] uppercase text-accent hover:underline"
-                >
-                  Download
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <ContentCalendar projectId={id} />
-
-      <section>
-        <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-4">Messages</h2>
-        <div className="border border-border/40 max-h-96 overflow-y-auto p-4 space-y-3 mb-3">
-          {messages.length === 0 && (
-            <p className="text-sm text-muted-foreground">No messages yet.</p>
-          )}
-          {messages.map((m: any) => {
-            const mine = m.sender_id === userId;
-            return (
-              <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-md ${mine ? "bg-accent/15" : "bg-muted/40"} px-4 py-2`}>
-                  <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-1">
-                    {m.sender_name} · {new Date(m.created_at).toLocaleString()}
-                  </p>
-                  <p className="text-sm whitespace-pre-wrap text-foreground">{m.body}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (body.trim()) sendMut.mutate();
-          }}
-          className="flex gap-2"
-        >
-          <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder="Reply…"
-            rows={2}
-            className="flex-1 bg-transparent border border-border px-4 py-2 focus:outline-none focus:border-accent resize-none"
-          />
+      <nav className="flex gap-1 border-b border-border/40 -mb-px overflow-x-auto">
+        {(
+          [
+            ["strategy", "Strategy"],
+            ["calendar", "Calendar"],
+            ["files", "Files"],
+            ["messages", "Messages"],
+          ] as const
+        ).map(([key, label]) => (
           <button
-            type="submit"
-            disabled={sendMut.isPending || !body.trim()}
-            className="bg-accent text-accent-foreground px-6 text-xs tracking-[0.3em] uppercase hover:bg-accent/90 disabled:opacity-60"
+            key={key}
+            onClick={() => setTab(key)}
+            className={`px-4 py-3 text-xs tracking-[0.3em] uppercase border-b-2 transition-colors ${
+              tab === key
+                ? "border-accent text-accent"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
           >
-            Send
+            {label}
           </button>
-        </form>
-      </section>
+        ))}
+      </nav>
+
+      {tab === "strategy" && (
+        <StrategyPanel projectId={id} strategy={project.strategy ?? null} canEdit={true} />
+      )}
+
+      {tab === "calendar" && <ContentCalendar projectId={id} />}
+
+      {tab === "files" && (
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground">Files</h2>
+            <label className="text-xs tracking-[0.3em] uppercase border border-accent/40 px-4 py-2 cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors">
+              {uploading ? "Uploading…" : "+ Upload"}
+              <input
+                ref={fileRef}
+                type="file"
+                className="hidden"
+                disabled={uploading}
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleFile(f);
+                }}
+              />
+            </label>
+          </div>
+          {assets.length === 0 ? (
+            <p className="text-sm text-muted-foreground border border-border/40 p-6">No files yet.</p>
+          ) : (
+            <ul className="border border-border/40 divide-y divide-border/40">
+              {assets.map((a: any) => (
+                <li key={a.id} className="flex items-center justify-between p-4">
+                  <div>
+                    <p className="text-foreground">{a.label ?? a.storage_path.split("/").pop()}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {a.file_type ?? "file"}
+                      {a.file_size ? ` · ${(a.file_size / 1024).toFixed(0)} KB` : ""}
+                      {" · "}{new Date(a.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleDownload(a.id)}
+                    className="text-xs tracking-[0.3em] uppercase text-accent hover:underline"
+                  >
+                    Download
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
+
+      {tab === "messages" && (
+        <section>
+          <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-4">Messages</h2>
+          <div className="border border-border/40 max-h-96 overflow-y-auto p-4 space-y-3 mb-3">
+            {messages.length === 0 && (
+              <p className="text-sm text-muted-foreground">No messages yet.</p>
+            )}
+            {messages.map((m: any) => {
+              const mine = m.sender_id === userId;
+              return (
+                <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-md ${mine ? "bg-accent/15" : "bg-muted/40"} px-4 py-2`}>
+                    <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-1">
+                      {m.sender_name} · {new Date(m.created_at).toLocaleString()}
+                    </p>
+                    <p className="text-sm whitespace-pre-wrap text-foreground">{m.body}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (body.trim()) sendMut.mutate();
+            }}
+            className="flex gap-2"
+          >
+            <textarea
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              placeholder="Reply…"
+              rows={2}
+              className="flex-1 bg-transparent border border-border px-4 py-2 focus:outline-none focus:border-accent resize-none"
+            />
+            <button
+              type="submit"
+              disabled={sendMut.isPending || !body.trim()}
+              className="bg-accent text-accent-foreground px-6 text-xs tracking-[0.3em] uppercase hover:bg-accent/90 disabled:opacity-60"
+            >
+              Send
+            </button>
+          </form>
+        </section>
+      )}
     </div>
   );
 }
