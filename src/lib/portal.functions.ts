@@ -450,7 +450,7 @@ export const updateCalendarEntry = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data, context }) => {
-    const patch: Record<string, any> = {};
+    const patch: any = {};
     if (data.scheduledDate !== undefined) patch.scheduled_date = data.scheduledDate;
     if (data.title !== undefined) patch.title = data.title;
     if (data.notes !== undefined) patch.notes = data.notes;
