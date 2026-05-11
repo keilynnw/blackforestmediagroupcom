@@ -8,8 +8,8 @@ import React from "react";
 // ---- Mocks (must be set up before importing the route) ----
 
 const navigateMock = vi.fn();
-const createMock = vi.fn();
-const listMock = vi.fn(async () => ({ projects: [] }));
+const createMock = vi.fn<(arg?: any) => any>();
+const listMock = vi.fn<(arg?: any) => any>(async () => ({ projects: [] }));
 
 vi.mock("@tanstack/react-router", () => ({
   createFileRoute: () => (cfg: any) => cfg,
