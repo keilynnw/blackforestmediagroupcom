@@ -65,6 +65,12 @@ function ClientCredentialsEditor({
       }}
       className="mt-3 space-y-2 border-t border-border/40 pt-3"
     >
+      <p className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
+        Username
+      </p>
+      <p className="text-foreground -mt-1 mb-1">
+        {client.display_name ?? "—"}
+      </p>
       <input
         type="email"
         placeholder="Email"
