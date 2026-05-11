@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
@@ -11,6 +11,7 @@ export const Route = createFileRoute("/_authenticated/admin/projects/")({
 
 function AdminProjects() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const fetchProjects = useServerFn(listProjectsAdmin);
   const create = useServerFn(createProject);
 
@@ -20,13 +21,26 @@ function AdminProjects() {
   const [description, setDescription] = useState("");
 
   const createMut = useMutation({
-    mutationFn: () =>
-      create({ data: { title, description: description || undefined } }),
-    onSuccess: () => {
+    mutationFn: async () => {
+      const result = await create({ data: { title: title.trim(), description: description.trim() || undefined } });
+      if (!result?.project?.id) throw new Error("Project could not be created. Please try again.");
+      return result.project;
+    },
+    onSuccess: async (project) => {
+      qc.setQueryData(["admin-projects"], (current: any) => ({
+        projects: [project, ...((current?.projects ?? []).filter((p: any) => p.id !== project.id))],
+      }));
+      qc.setQueryData(["project", project.id], {
+        project,
+        client: null,
+        assets: [],
+        messages: [],
+      });
+      void qc.invalidateQueries({ queryKey: ["admin-projects"] });
       toast.success("Project created — assign a client from the project page");
       setTitle("");
       setDescription("");
-      qc.invalidateQueries({ queryKey: ["admin-projects"] });
+      navigate({ to: "/admin/projects/$id", params: { id: project.id } });
     },
     onError: (e: any) => toast.error(e?.message ?? "Failed"),
   });
