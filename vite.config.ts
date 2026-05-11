@@ -1,7 +1,12 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
-  ssr: {
-    noExternal: ["h3-v2"],
+  tanstackStart: {
+    server: { entry: "server" },
+  },
+  vite: {
+    ssr: {
+      noExternal: ["h3-v2", "rou3", "srvx"],
+    },
   },
 });
