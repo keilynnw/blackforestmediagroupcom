@@ -189,6 +189,49 @@ export const listProjectsAdmin = createServerFn({ method: "GET" })
     };
   });
 
+// Exported for unit/integration tests. Performs the insert + verify flow
+// with whichever admin client is passed in (real one in production, mock in tests).
+export async function createProjectImpl(
+  admin: any,
+  input: { title: string; description?: string | null; clientId?: string | null; userId: string },
+) {
+  const payload = {
+    title: input.title,
+    description: input.description?.trim() ? input.description.trim() : null,
+    client_id: input.clientId ?? null,
+    created_by: input.userId,
+  };
+
+  const { data: row, error } = await admin
+    .from("projects")
+    .insert(payload)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("[createProject] insert error", error);
+    throw new Error(error.message);
+  }
+
+  if (!row?.id) {
+    console.error("[createProject] insert returned no project", row);
+    throw new Error("Project could not be created. Please try again.");
+  }
+
+  const { data: verified, error: verifyError } = await admin
+    .from("projects")
+    .select("*")
+    .eq("id", row.id)
+    .maybeSingle();
+
+  if (verifyError || !verified) {
+    console.error("[createProject] verification failed", verifyError ?? { id: row.id });
+    throw new Error(verifyError?.message ?? "Project was not saved. Please try again.");
+  }
+
+  return { project: verified };
+}
+
 export const createProject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
@@ -200,42 +243,12 @@ export const createProject = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase, context.userId);
-
-    const payload = {
+    return createProjectImpl(supabaseAdmin, {
       title: data.title,
-      description: data.description?.trim() ? data.description.trim() : null,
-      client_id: data.clientId ?? null,
-      created_by: context.userId,
-    };
-
-    const { data: row, error } = await supabaseAdmin
-      .from("projects")
-      .insert(payload)
-      .select()
-      .single();
-
-    if (error) {
-      console.error("[createProject] insert error", error);
-      throw new Error(error.message);
-    }
-
-    if (!row?.id) {
-      console.error("[createProject] insert returned no project", row);
-      throw new Error("Project could not be created. Please try again.");
-    }
-
-    const { data: verified, error: verifyError } = await supabaseAdmin
-      .from("projects")
-      .select("*")
-      .eq("id", row.id)
-      .maybeSingle();
-
-    if (verifyError || !verified) {
-      console.error("[createProject] verification failed", verifyError ?? { id: row.id });
-      throw new Error(verifyError?.message ?? "Project was not saved. Please try again.");
-    }
-
-    return { project: verified };
+      description: data.description,
+      clientId: data.clientId,
+      userId: context.userId,
+    });
   });
 
 export const updateProject = createServerFn({ method: "POST" })
