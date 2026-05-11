@@ -62,6 +62,48 @@ function AdminClients() {
       </div>
 
       <section className="border border-border/40 p-6">
+        <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-4">Add a client</h2>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (newName.trim()) createMut.mutate();
+          }}
+          className="space-y-3"
+        >
+          <input
+            required
+            placeholder="Client name"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className="w-full bg-transparent border border-border px-4 py-2 focus:outline-none focus:border-accent"
+          />
+          <input
+            placeholder="Company (optional)"
+            value={newCompany}
+            onChange={(e) => setNewCompany(e.target.value)}
+            className="w-full bg-transparent border border-border px-4 py-2 focus:outline-none focus:border-accent"
+          />
+          <input
+            type="email"
+            placeholder="Email (optional — for sending an invite later)"
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+            className="w-full bg-transparent border border-border px-4 py-2 focus:outline-none focus:border-accent"
+          />
+          <button
+            type="submit"
+            disabled={createMut.isPending || !newName.trim()}
+            className="bg-accent text-accent-foreground px-6 py-2 text-xs tracking-[0.3em] uppercase hover:bg-accent/90 disabled:opacity-60"
+          >
+            {createMut.isPending ? "…" : "Create client"}
+          </button>
+          <p className="text-xs text-muted-foreground">
+            Creates the client record so you can attach them to a project. Send a portal invite below when they're ready to log in.
+          </p>
+        </form>
+      </section>
+
+      <section className="border border-border/40 p-6">
         <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-4">Invite a client</h2>
         <form
           onSubmit={(e) => {
