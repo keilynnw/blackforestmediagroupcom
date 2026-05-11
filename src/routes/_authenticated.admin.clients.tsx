@@ -236,10 +236,19 @@ function AdminClients() {
         <div className="border border-border/40 divide-y divide-border/40">
           {(clients.data?.clients ?? []).map((c: any) => (
             <div key={c.id} className="p-4">
-              <p className="text-foreground">{c.display_name ?? "—"}</p>
-              <p className="text-xs text-muted-foreground">
-                {c.company ?? "No company"} · joined {new Date(c.created_at).toLocaleDateString()}
-              </p>
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-foreground">{c.display_name ?? "—"}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {c.email ?? "no email"} · {c.company ?? "No company"} · joined{" "}
+                    {new Date(c.created_at).toLocaleDateString()}
+                  </p>
+                </div>
+                <ClientCredentialsEditor
+                  client={{ id: c.id, display_name: c.display_name, email: c.email }}
+                  onSaved={() => qc.invalidateQueries({ queryKey: ["admin-clients"] })}
+                />
+              </div>
             </div>
           ))}
           {(clients.data?.clients ?? []).length === 0 && (
