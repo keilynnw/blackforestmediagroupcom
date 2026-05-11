@@ -30,7 +30,13 @@ function AdminProjects() {
       qc.setQueryData(["admin-projects"], (current: any) => ({
         projects: [project, ...((current?.projects ?? []).filter((p: any) => p.id !== project.id))],
       }));
-      await qc.invalidateQueries({ queryKey: ["admin-projects"] });
+      qc.setQueryData(["project", project.id], {
+        project,
+        client: null,
+        assets: [],
+        messages: [],
+      });
+      void qc.invalidateQueries({ queryKey: ["admin-projects"] });
       toast.success("Project created — assign a client from the project page");
       setTitle("");
       setDescription("");
