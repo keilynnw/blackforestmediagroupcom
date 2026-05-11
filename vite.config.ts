@@ -4,7 +4,9 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
-  ssr: {
-    noExternal: ["h3-v2"],
+  vite: {
+    ssr: {
+      noExternal: ["h3-v2"],
+    },
   },
 });
