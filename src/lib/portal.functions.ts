@@ -222,11 +222,14 @@ export const updateProject = createServerFn({ method: "POST" })
       title: z.string().trim().min(1).max(200).optional(),
       description: z.string().trim().max(2000).optional(),
       status: z.enum(["active", "paused", "completed"]).optional(),
+      clientId: z.string().uuid().nullable().optional(),
     }),
   )
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase, context.userId);
-    const { id, ...fields } = data;
+    const { id, clientId, ...rest } = data;
+    const fields: any = { ...rest };
+    if (clientId !== undefined) fields.client_id = clientId;
     const { error } = await supabaseAdmin.from("projects").update(fields).eq("id", id);
     if (error) throw new Error(error.message);
     return { ok: true };
