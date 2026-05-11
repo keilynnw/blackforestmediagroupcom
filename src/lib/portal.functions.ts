@@ -2,6 +2,33 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { enqueueTemplateEmail } from "@/lib/email-notify.server";
+
+async function notifyPortalActivity(opts: {
+  kind: "message" | "upload";
+  projectId: string;
+  actorId: string;
+  detail?: string;
+}) {
+  try {
+    const [{ data: project }, { data: actor }, { data: actorRoles }] = await Promise.all([
+      supabaseAdmin.from("projects").select("id, title").eq("id", opts.projectId).maybeSingle(),
+      supabaseAdmin.from("profiles").select("display_name").eq("id", opts.actorId).maybeSingle(),
+      supabaseAdmin.from("user_roles").select("role").eq("user_id", opts.actorId),
+    ]);
+    const isAdminActor = (actorRoles ?? []).some((r: any) => r.role === "admin");
+    if (isAdminActor) return; // only notify when a client triggers activity
+    await enqueueTemplateEmail("portal-activity", {
+      kind: opts.kind,
+      projectTitle: (project as any)?.title ?? "Untitled",
+      actorName: (actor as any)?.display_name ?? "A client",
+      detail: opts.detail ?? "",
+      projectUrl: `https://blackforestmediagroup.com/admin/projects/${opts.projectId}`,
+    });
+  } catch (err) {
+    console.error("notifyPortalActivity failed", err);
+  }
+}
 
 // ===== Helpers =====
 async function assertAdmin(supabase: any, userId: string) {
@@ -272,6 +299,12 @@ export const sendMessage = createServerFn({ method: "POST" })
       body: data.body,
     });
     if (error) throw new Error(error.message);
+    await notifyPortalActivity({
+      kind: "message",
+      projectId: data.projectId,
+      actorId: context.userId,
+      detail: data.body.slice(0, 500),
+    });
     return { ok: true };
   });
 
@@ -323,6 +356,12 @@ export const registerAsset = createServerFn({ method: "POST" })
       file_size: data.fileSize ?? null,
     });
     if (error) throw new Error(error.message);
+    await notifyPortalActivity({
+      kind: "upload",
+      projectId: data.projectId,
+      actorId: context.userId,
+      detail: data.label || data.storagePath.split("/").pop() || "(file)",
+    });
     return { ok: true };
   });
 

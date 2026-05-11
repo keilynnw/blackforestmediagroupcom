@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
 import { template as contactNotification } from './contact-notification'
+import { template as portalActivity } from './portal-activity'
 
 export interface TemplateEntry {
   component: ComponentType<any>
@@ -12,4 +13,5 @@ export interface TemplateEntry {
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'contact-notification': contactNotification,
+  'portal-activity': portalActivity,
 }
