@@ -6,7 +6,7 @@ export default defineConfig({
   },
   vite: {
     ssr: {
-      noExternal: ["h3-v2"],
+      noExternal: ["h3-v2", "rou3", "srvx"],
     },
   },
 });
