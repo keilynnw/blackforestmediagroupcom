@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { listClients, listInvitations, createInvitation } from "@/lib/portal.functions";
+import { listClients, listInvitations, createInvitation, createClient } from "@/lib/portal.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/clients")({
@@ -14,11 +14,34 @@ function AdminClients() {
   const fetchClients = useServerFn(listClients);
   const fetchInvites = useServerFn(listInvitations);
   const invite = useServerFn(createInvitation);
+  const create = useServerFn(createClient);
 
   const clients = useQuery({ queryKey: ["admin-clients"], queryFn: () => fetchClients() });
   const invites = useQuery({ queryKey: ["admin-invites"], queryFn: () => fetchInvites() });
 
   const [email, setEmail] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newCompany, setNewCompany] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+
+  const createMut = useMutation({
+    mutationFn: () =>
+      create({
+        data: {
+          displayName: newName.trim(),
+          company: newCompany.trim() || undefined,
+          email: newEmail.trim() || undefined,
+        },
+      }),
+    onSuccess: () => {
+      toast.success("Client created — you can now attach them to a project");
+      setNewName("");
+      setNewCompany("");
+      setNewEmail("");
+      qc.invalidateQueries({ queryKey: ["admin-clients"] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Failed to create client"),
+  });
 
   const inviteMut = useMutation({
     mutationFn: () => invite({ data: { email, role: "client" } }),
