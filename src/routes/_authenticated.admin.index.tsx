@@ -12,9 +12,11 @@ function AdminOverview() {
   const fetchClients = useServerFn(listClients);
   const projects = useQuery({ queryKey: ["admin-projects"], queryFn: () => fetchProjects() });
   const clients = useQuery({ queryKey: ["admin-clients"], queryFn: () => fetchClients() });
+  const projectRows = projects.data?.projects ?? [];
+  const clientRows = clients.data?.clients ?? [];
 
-  const total = projects.data?.projects.length ?? 0;
-  const active = (projects.data?.projects ?? []).filter((p: any) => p.status === "active").length;
+  const total = projectRows.length;
+  const active = projectRows.filter((p: any) => p.status === "active").length;
 
   return (
     <div className="space-y-10">
@@ -24,7 +26,7 @@ function AdminOverview() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Stat label="Clients" value={clients.data?.clients.length ?? 0} />
+        <Stat label="Clients" value={clientRows.length} />
         <Stat label="Active projects" value={active} />
         <Stat label="Total projects" value={total} />
       </div>
@@ -37,7 +39,7 @@ function AdminOverview() {
           </Link>
         </div>
         <div className="border border-border/40 divide-y divide-border/40">
-          {(projects.data?.projects ?? []).slice(0, 5).map((p: any) => (
+          {projectRows.slice(0, 5).map((p: any) => (
             <Link
               key={p.id}
               to="/admin/projects/$id"
@@ -55,7 +57,7 @@ function AdminOverview() {
               </span>
             </Link>
           ))}
-          {(projects.data?.projects ?? []).length === 0 && (
+          {projectRows.length === 0 && (
             <p className="p-6 text-sm text-muted-foreground">No projects yet.</p>
           )}
         </div>
