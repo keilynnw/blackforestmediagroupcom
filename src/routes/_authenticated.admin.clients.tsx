@@ -2,12 +2,110 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { listClients, listInvitations, createInvitation, createClient } from "@/lib/portal.functions";
+import {
+  listClients,
+  listInvitations,
+  createInvitation,
+  createClient,
+  updateClientCredentials,
+} from "@/lib/portal.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/clients")({
   component: AdminClients,
 });
+
+function ClientCredentialsEditor({
+  client,
+  onSaved,
+}: {
+  client: { id: string; display_name: string | null; email: string | null };
+  onSaved: () => void;
+}) {
+  const update = useServerFn(updateClientCredentials);
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState(client.email ?? "");
+  const [password, setPassword] = useState("");
+
+  const mut = useMutation({
+    mutationFn: () => {
+      const payload: any = { userId: client.id };
+      if (email && email !== client.email) payload.email = email.trim();
+      if (password) payload.password = password;
+      if (!payload.email && !payload.password) {
+        throw new Error("Change the email or set a new password");
+      }
+      return update({ data: payload });
+    },
+    onSuccess: () => {
+      toast.success("Credentials updated");
+      setPassword("");
+      setOpen(false);
+      onSaved();
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not update"),
+  });
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="text-xs tracking-[0.3em] uppercase text-accent hover:underline shrink-0"
+      >
+        Edit login
+      </button>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        mut.mutate();
+      }}
+      className="mt-3 space-y-2 border-t border-border/40 pt-3"
+    >
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="w-full bg-transparent border border-border px-3 py-2 text-sm focus:outline-none focus:border-accent"
+      />
+      <input
+        type="text"
+        placeholder="New password (leave blank to keep current)"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        autoComplete="new-password"
+        className="w-full bg-transparent border border-border px-3 py-2 text-sm focus:outline-none focus:border-accent"
+      />
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          disabled={mut.isPending}
+          className="bg-accent text-accent-foreground px-4 py-2 text-xs tracking-[0.3em] uppercase hover:bg-accent/90 disabled:opacity-60"
+        >
+          {mut.isPending ? "…" : "Save"}
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setOpen(false);
+            setPassword("");
+            setEmail(client.email ?? "");
+          }}
+          className="px-4 py-2 text-xs tracking-[0.3em] uppercase border border-border hover:bg-muted/40"
+        >
+          Cancel
+        </button>
+      </div>
+      <p className="text-[10px] text-muted-foreground">
+        Password must be at least 8 characters. Share it with the client securely.
+      </p>
+    </form>
+  );
+}
 
 function AdminClients() {
   const qc = useQueryClient();
