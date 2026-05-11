@@ -135,11 +135,30 @@ function AdminProjectDetail() {
             <option value="completed">Completed</option>
           </select>
         </div>
-        {client && (
-          <p className="text-sm text-muted-foreground mt-2">
-            Client: {client.display_name}{client.company ? ` · ${client.company}` : ""}
-          </p>
-        )}
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <span className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
+            Client
+          </span>
+          <select
+            value={project.client_id ?? ""}
+            onChange={(e) =>
+              clientMut.mutate(e.target.value ? e.target.value : null)
+            }
+            disabled={clientMut.isPending}
+            className="bg-background border border-border px-3 py-2 text-xs"
+          >
+            <option value="">— No client assigned —</option>
+            {(clientsQ.data?.clients ?? []).map((c: any) => (
+              <option key={c.id} value={c.id}>
+                {c.display_name ?? c.id}
+                {c.company ? ` · ${c.company}` : ""}
+              </option>
+            ))}
+          </select>
+          {client?.company && (
+            <span className="text-xs text-muted-foreground">{client.company}</span>
+          )}
+        </div>
         {project.description && (
           <p className="text-foreground/80 mt-4 max-w-2xl">{project.description}</p>
         )}
