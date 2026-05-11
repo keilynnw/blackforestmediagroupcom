@@ -356,6 +356,12 @@ export const registerAsset = createServerFn({ method: "POST" })
       file_size: data.fileSize ?? null,
     });
     if (error) throw new Error(error.message);
+    await notifyPortalActivity({
+      kind: "upload",
+      projectId: data.projectId,
+      actorId: context.userId,
+      detail: data.label || data.storagePath.split("/").pop() || "(file)",
+    });
     return { ok: true };
   });
 
