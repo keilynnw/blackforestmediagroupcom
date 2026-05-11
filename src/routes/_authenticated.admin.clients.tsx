@@ -127,6 +127,8 @@ function AdminClients() {
   const [newName, setNewName] = useState("");
   const [newCompany, setNewCompany] = useState("");
   const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [lastCreated, setLastCreated] = useState<{ email: string; password: string } | null>(null);
 
   const createMut = useMutation({
     mutationFn: () =>
@@ -135,13 +137,18 @@ function AdminClients() {
           displayName: newName.trim(),
           company: newCompany.trim() || undefined,
           email: newEmail.trim() || undefined,
+          password: newPassword || undefined,
         },
       }),
     onSuccess: () => {
-      toast.success("Client created — you can now attach them to a project");
+      toast.success("Client created — they can now log in");
+      if (newEmail.trim() && newPassword) {
+        setLastCreated({ email: newEmail.trim(), password: newPassword });
+      }
       setNewName("");
       setNewCompany("");
       setNewEmail("");
+      setNewPassword("");
       qc.invalidateQueries({ queryKey: ["admin-clients"] });
     },
     onError: (e: any) => toast.error(e?.message ?? "Failed to create client"),
@@ -166,7 +173,14 @@ function AdminClients() {
       </div>
 
       <section className="border border-border/40 p-6">
-        <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-4">Add a client</h2>
+        <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-4">
+          Register a new client
+        </h2>
+        <p className="text-xs text-muted-foreground mb-4">
+          Creates the client's portal login. Give them the email + password below
+          and they can sign in at <span className="text-foreground">/portal/login</span>.
+          They'll only see projects you've assigned to them.
+        </p>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -189,9 +203,18 @@ function AdminClients() {
           />
           <input
             type="email"
-            placeholder="Email (optional — for sending an invite later)"
+            placeholder="Login email"
             value={newEmail}
             onChange={(e) => setNewEmail(e.target.value)}
+            className="w-full bg-transparent border border-border px-4 py-2 focus:outline-none focus:border-accent"
+          />
+          <input
+            type="text"
+            placeholder="Initial password (min 8 characters)"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            minLength={8}
+            autoComplete="off"
             className="w-full bg-transparent border border-border px-4 py-2 focus:outline-none focus:border-accent"
           />
           <button
@@ -201,10 +224,36 @@ function AdminClients() {
           >
             {createMut.isPending ? "…" : "Create client"}
           </button>
-          <p className="text-xs text-muted-foreground">
-            Creates the client record so you can attach them to a project. Send a portal invite below when they're ready to log in.
-          </p>
         </form>
+
+        {lastCreated && (
+          <div className="mt-4 border border-accent/40 bg-accent/5 p-4">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-accent mb-2">
+              Login created — share these with your client
+            </p>
+            <p className="text-sm">Email: <span className="text-foreground">{lastCreated.email}</span></p>
+            <p className="text-sm">Password: <span className="text-foreground font-mono">{lastCreated.password}</span></p>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `Portal: ${window.location.origin}/portal/login\nEmail: ${lastCreated.email}\nPassword: ${lastCreated.password}`,
+                );
+                toast.success("Login details copied");
+              }}
+              className="mt-3 text-xs tracking-[0.3em] uppercase text-accent hover:underline"
+            >
+              Copy login details
+            </button>
+            <button
+              type="button"
+              onClick={() => setLastCreated(null)}
+              className="ml-4 text-xs tracking-[0.3em] uppercase text-muted-foreground hover:text-foreground"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
       </section>
 
       <section className="border border-border/40 p-6">
