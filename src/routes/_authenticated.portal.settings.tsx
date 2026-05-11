@@ -9,7 +9,8 @@ export const Route = createFileRoute("/_authenticated/portal/settings")({
 });
 
 function PortalSettings() {
-  const { email } = useAuth();
+  const { session } = useAuth();
+  const email = session?.user?.email ?? null;
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [saving, setSaving] = useState(false);
