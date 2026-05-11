@@ -153,6 +153,8 @@ function ProjectDetail() {
         )}
       </section>
 
+      <ContentCalendar projectId={id} />
+
       <section>
         <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-4">Messages</h2>
         <div className="border border-border/40 max-h-96 overflow-y-auto p-4 space-y-3 mb-3">
