@@ -29,10 +29,15 @@ function AdminProjectDetail() {
   const register = useServerFn(registerAsset);
   const download = useServerFn(getAssetDownloadUrl);
   const update = useServerFn(updateProject);
+  const fetchClients = useServerFn(listClients);
 
   const { data, isLoading } = useQuery({
     queryKey: ["project", id],
     queryFn: () => fetchDetail({ data: { id } }),
+  });
+  const clientsQ = useQuery({
+    queryKey: ["admin-clients"],
+    queryFn: () => fetchClients(),
   });
 
   const [body, setBody] = useState("");
