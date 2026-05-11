@@ -199,6 +199,7 @@ export const createProject = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data, context }) => {
+    console.log("[createProject] called by", context.userId, "with", data);
     await assertAdmin(context.supabase, context.userId);
     const { data: row, error } = await supabaseAdmin
       .from("projects")
@@ -210,7 +211,11 @@ export const createProject = createServerFn({ method: "POST" })
       })
       .select()
       .single();
-    if (error) throw new Error(error.message);
+    if (error) {
+      console.error("[createProject] insert error", error);
+      throw new Error(error.message);
+    }
+    console.log("[createProject] inserted", row?.id);
     return { project: row };
   });
 
