@@ -11,6 +11,7 @@ import {
 } from "@/lib/portal.functions";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
+import { ContentCalendar } from "@/components/content-calendar";
 
 export const Route = createFileRoute("/_authenticated/portal/projects/$id")({
   component: ProjectDetail,
@@ -151,6 +152,8 @@ function ProjectDetail() {
           </ul>
         )}
       </section>
+
+      <ContentCalendar projectId={id} />
 
       <section>
         <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground mb-4">Messages</h2>
