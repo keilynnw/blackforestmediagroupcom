@@ -137,6 +137,59 @@ export const acceptInvitation = createServerFn({ method: "POST" })
   });
 
 // ===== Clients =====
+export const createClient = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    z.object({
+      displayName: z.string().trim().min(1).max(100),
+      company: z.string().trim().max(150).optional().nullable(),
+      email: z.string().trim().email().max(255).optional().nullable(),
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+
+    const email =
+      data.email?.toLowerCase().trim() ||
+      `client+${crypto.randomUUID().slice(0, 8)}@placeholder.blackforestmediagroup.com`;
+
+    // Create auth user (no password — admin can send invite/reset later)
+    const { data: created, error: userErr } =
+      await supabaseAdmin.auth.admin.createUser({
+        email,
+        email_confirm: true,
+        user_metadata: { display_name: data.displayName },
+      });
+    if (userErr || !created.user) {
+      throw new Error(userErr?.message ?? "Could not create client");
+    }
+
+    const userId = created.user.id;
+
+    const { error: profileErr } = await supabaseAdmin
+      .from("profiles")
+      .upsert({
+        id: userId,
+        display_name: data.displayName,
+        company: data.company?.trim() || null,
+      });
+    if (profileErr) throw new Error(profileErr.message);
+
+    const { error: roleErr } = await supabaseAdmin
+      .from("user_roles")
+      .insert({ user_id: userId, role: "client" });
+    if (roleErr) throw new Error(roleErr.message);
+
+    return {
+      client: {
+        id: userId,
+        display_name: data.displayName,
+        company: data.company?.trim() || null,
+        created_at: new Date().toISOString(),
+      },
+    };
+  });
+
 export const listClients = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
