@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      content_calendar_entries: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          notes: string | null
+          platform: string | null
+          project_id: string
+          scheduled_date: string
+          status: Database["public"]["Enums"]["calendar_entry_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          platform?: string | null
+          project_id: string
+          scheduled_date: string
+          status?: Database["public"]["Enums"]["calendar_entry_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          platform?: string | null
+          project_id?: string
+          scheduled_date?: string
+          status?: Database["public"]["Enums"]["calendar_entry_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -359,6 +398,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "client"
+      calendar_entry_status: "idea" | "scheduled" | "published"
       project_status: "active" | "paused" | "completed"
     }
     CompositeTypes: {
@@ -488,6 +528,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "client"],
+      calendar_entry_status: ["idea", "scheduled", "published"],
       project_status: ["active", "paused", "completed"],
     },
   },
