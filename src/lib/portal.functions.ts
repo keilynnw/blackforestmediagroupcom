@@ -299,6 +299,12 @@ export const sendMessage = createServerFn({ method: "POST" })
       body: data.body,
     });
     if (error) throw new Error(error.message);
+    await notifyPortalActivity({
+      kind: "message",
+      projectId: data.projectId,
+      actorId: context.userId,
+      detail: data.body.slice(0, 500),
+    });
     return { ok: true };
   });
 
