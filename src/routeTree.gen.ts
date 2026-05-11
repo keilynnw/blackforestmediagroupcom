@@ -19,6 +19,7 @@ import { Route as PortalResetPasswordRouteImport } from './routes/portal.reset-p
 import { Route as PortalLoginRouteImport } from './routes/portal.login'
 import { Route as PortalAcceptInviteRouteImport } from './routes/portal.accept-invite'
 import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenticated.portal.index'
 import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
@@ -76,6 +77,11 @@ const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
   path: '/email/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedPortalIndexRoute =
   AuthenticatedPortalIndexRouteImport.update({
     id: '/portal/',
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/portal/accept-invite': typeof PortalAcceptInviteRoute
   '/portal/login': typeof PortalLoginRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/portal/accept-invite': typeof PortalAcceptInviteRoute
   '/portal/login': typeof PortalLoginRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/portal/accept-invite': typeof PortalAcceptInviteRoute
   '/portal/login': typeof PortalLoginRoute
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/services'
     | '/unsubscribe'
+    | '/admin'
     | '/email/unsubscribe'
     | '/portal/accept-invite'
     | '/portal/login'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/services'
     | '/unsubscribe'
+    | '/admin'
     | '/email/unsubscribe'
     | '/portal/accept-invite'
     | '/portal/login'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/services'
     | '/unsubscribe'
+    | '/_authenticated/admin'
     | '/email/unsubscribe'
     | '/portal/accept-invite'
     | '/portal/login'
@@ -321,6 +333,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/portal/': {
       id: '/_authenticated/portal/'
       path: '/portal'
@@ -374,11 +393,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedPortalIndexRoute: typeof AuthenticatedPortalIndexRoute
   AuthenticatedPortalProjectsIdRoute: typeof AuthenticatedPortalProjectsIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedPortalIndexRoute: AuthenticatedPortalIndexRoute,
   AuthenticatedPortalProjectsIdRoute: AuthenticatedPortalProjectsIdRoute,
 }
