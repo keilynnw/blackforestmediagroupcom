@@ -248,6 +248,7 @@ export const getProjectDetail = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     if (!project) throw new Error("Project not found");
 
+    const clientId = (project as any).client_id as string | null;
     const [assetsRes, messagesRes, clientRes] = await Promise.all([
       supabase
         .from("project_assets")
@@ -259,11 +260,13 @@ export const getProjectDetail = createServerFn({ method: "POST" })
         .select("*")
         .eq("project_id", data.id)
         .order("created_at", { ascending: true }),
-      supabase
-        .from("profiles")
-        .select("id, display_name, company")
-        .eq("id", (project as any).client_id)
-        .maybeSingle(),
+      clientId
+        ? supabase
+            .from("profiles")
+            .select("id, display_name, company")
+            .eq("id", clientId)
+            .maybeSingle()
+        : Promise.resolve({ data: null } as any),
     ]);
 
     // sender display names
