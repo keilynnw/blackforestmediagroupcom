@@ -63,6 +63,17 @@ function AdminProjectDetail() {
     },
   });
 
+  const clientMut = useMutation({
+    mutationFn: (clientId: string | null) =>
+      update({ data: { id, clientId } }),
+    onSuccess: () => {
+      toast.success("Client updated");
+      qc.invalidateQueries({ queryKey: ["project", id] });
+      qc.invalidateQueries({ queryKey: ["admin-projects"] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not update client"),
+  });
+
   async function handleFile(file: File) {
     setUploading(true);
     try {
