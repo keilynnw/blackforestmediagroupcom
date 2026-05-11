@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { listProjectsAdmin, listClients, createProject } from "@/lib/portal.functions";
+import { listProjectsAdmin, createProject } from "@/lib/portal.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/projects/")({
@@ -12,23 +12,20 @@ export const Route = createFileRoute("/_authenticated/admin/projects/")({
 function AdminProjects() {
   const qc = useQueryClient();
   const fetchProjects = useServerFn(listProjectsAdmin);
-  const fetchClients = useServerFn(listClients);
   const create = useServerFn(createProject);
 
   const projects = useQuery({ queryKey: ["admin-projects"], queryFn: () => fetchProjects() });
-  const clients = useQuery({ queryKey: ["admin-clients"], queryFn: () => fetchClients() });
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [clientId, setClientId] = useState("");
 
   const createMut = useMutation({
-    mutationFn: () => create({ data: { title, description: description || undefined, clientId } }),
+    mutationFn: () =>
+      create({ data: { title, description: description || undefined } }),
     onSuccess: () => {
-      toast.success("Project created");
+      toast.success("Project created — assign a client from the project page");
       setTitle("");
       setDescription("");
-      setClientId("");
       qc.invalidateQueries({ queryKey: ["admin-projects"] });
     },
     onError: (e: any) => toast.error(e?.message ?? "Failed"),
@@ -43,7 +40,7 @@ function AdminProjects() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (title && clientId) createMut.mutate();
+            if (title) createMut.mutate();
           }}
           className="space-y-3"
         >
@@ -61,23 +58,13 @@ function AdminProjects() {
             rows={2}
             className="w-full bg-transparent border border-border px-4 py-2 focus:outline-none focus:border-accent resize-none"
           />
-          <select
-            required
-            value={clientId}
-            onChange={(e) => setClientId(e.target.value)}
-            className="w-full bg-background border border-border px-4 py-2 focus:outline-none focus:border-accent"
-          >
-            <option value="">Select client…</option>
-            {(clients.data?.clients ?? []).map((c: any) => (
-              <option key={c.id} value={c.id}>
-                {c.display_name ?? c.id}
-              </option>
-            ))}
-          </select>
+          <p className="text-xs text-muted-foreground">
+            You can assign a client from the project page after it's created.
+          </p>
           <button
             type="submit"
-            disabled={createMut.isPending}
-            className="bg-accent text-accent-foreground px-6 py-2 text-xs tracking-[0.3em] uppercase hover:bg-accent/90"
+            disabled={createMut.isPending || !title.trim()}
+            className="bg-accent text-accent-foreground px-6 py-2 text-xs tracking-[0.3em] uppercase hover:bg-accent/90 disabled:opacity-60"
           >
             Create project
           </button>
@@ -97,7 +84,7 @@ function AdminProjects() {
               <div>
                 <p className="text-foreground">{p.title}</p>
                 <p className="text-xs text-muted-foreground">
-                  {p.client?.display_name ?? "—"} · {p.status}
+                  {p.client?.display_name ?? "No client assigned"} · {p.status}
                 </p>
               </div>
               <span className="text-xs text-muted-foreground">
