@@ -14,6 +14,7 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { ContentCalendar } from "@/components/content-calendar";
+import { StrategyPanel } from "@/components/strategy-panel";
 
 export const Route = createFileRoute("/_authenticated/admin/projects/$id")({
   component: AdminProjectDetail,
