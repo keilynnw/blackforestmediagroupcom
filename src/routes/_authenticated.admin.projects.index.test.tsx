@@ -23,8 +23,8 @@ vi.mock("@tanstack/react-start", () => ({
 }));
 
 vi.mock("@/lib/portal.functions", () => ({
-  listProjectsAdmin: (...args: any[]) => listMock(...args),
-  createProject: (...args: any[]) => createMock(...args),
+  listProjectsAdmin: (arg?: any) => listMock(arg),
+  createProject: (arg?: any) => createMock(arg),
 }));
 
 vi.mock("sonner", () => ({
