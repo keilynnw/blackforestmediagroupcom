@@ -381,3 +381,99 @@ export const getAssetDownloadUrl = createServerFn({ method: "POST" })
     if (sErr) throw new Error(sErr.message);
     return { url: signed.signedUrl };
   });
+
+// ===== Content Calendar =====
+const CalendarStatus = z.enum(["idea", "scheduled", "published"]);
+
+export const listCalendarEntries = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    z.object({
+      projectId: z.string().uuid(),
+      monthStart: z.string(), // YYYY-MM-DD
+      monthEnd: z.string(),   // YYYY-MM-DD
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("content_calendar_entries")
+      .select("*")
+      .eq("project_id", data.projectId)
+      .gte("scheduled_date", data.monthStart)
+      .lte("scheduled_date", data.monthEnd)
+      .order("scheduled_date", { ascending: true });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const createCalendarEntry = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    z.object({
+      projectId: z.string().uuid(),
+      scheduledDate: z.string(),
+      title: z.string().min(1).max(200),
+      notes: z.string().max(4000).optional().nullable(),
+      platform: z.string().max(80).optional().nullable(),
+      status: CalendarStatus.optional(),
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    const { userId } = context;
+    const { data: row, error } = await context.supabase
+      .from("content_calendar_entries")
+      .insert({
+        project_id: data.projectId,
+        scheduled_date: data.scheduledDate,
+        title: data.title,
+        notes: data.notes ?? null,
+        platform: data.platform ?? null,
+        status: data.status ?? "idea",
+        created_by: userId,
+      })
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const updateCalendarEntry = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    z.object({
+      id: z.string().uuid(),
+      scheduledDate: z.string().optional(),
+      title: z.string().min(1).max(200).optional(),
+      notes: z.string().max(4000).optional().nullable(),
+      platform: z.string().max(80).optional().nullable(),
+      status: CalendarStatus.optional(),
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    const patch: Record<string, any> = {};
+    if (data.scheduledDate !== undefined) patch.scheduled_date = data.scheduledDate;
+    if (data.title !== undefined) patch.title = data.title;
+    if (data.notes !== undefined) patch.notes = data.notes;
+    if (data.platform !== undefined) patch.platform = data.platform;
+    if (data.status !== undefined) patch.status = data.status;
+    const { data: row, error } = await context.supabase
+      .from("content_calendar_entries")
+      .update(patch)
+      .eq("id", data.id)
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const deleteCalendarEntry = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ id: z.string().uuid() }))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("content_calendar_entries")
+      .delete()
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
