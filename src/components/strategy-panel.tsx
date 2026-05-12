@@ -35,7 +35,7 @@ export function StrategyPanel({
 
   return (
     <section>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-start mb-4">
         <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground">
           Strategy
         </h2>
@@ -43,7 +43,7 @@ export function StrategyPanel({
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="inline-flex min-h-11 w-full shrink-0 items-center justify-center border border-accent bg-accent px-5 py-3 text-xs font-semibold tracking-[0.24em] uppercase text-accent-foreground shadow-sm transition-colors hover:bg-accent/90 sm:w-auto"
+            className="inline-flex min-h-11 w-full shrink-0 items-center justify-center border border-accent bg-accent px-5 py-3 text-xs font-semibold tracking-[0.24em] uppercase text-accent-foreground shadow-sm transition-colors hover:bg-accent/90 sm:ml-4 sm:w-auto"
           >
             {strategy ? "Edit strategy" : "+ Add strategy"}
           </button>
