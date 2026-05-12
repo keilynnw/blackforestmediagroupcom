@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/portal/projects/$id")({
 
 function ProjectDetail() {
   const { id } = Route.useParams();
-  const { isAdmin } = useAuth();
+  const { userId, isAdmin } = useAuth();
   const qc = useQueryClient();
   const fetchDetail = useServerFn(getProjectDetail);
   const sendMsg = useServerFn(sendMessage);
