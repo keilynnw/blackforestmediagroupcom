@@ -72,7 +72,22 @@ function AdminProjectDetail() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["project", id],
-    queryFn: () => fetchDetail({ data: { id } }),
+    queryFn: async () => {
+      try {
+        return await fetchDetail({ data: { id } });
+      } catch (e) {
+        if (e instanceof Response) {
+          throw new Error(
+            e.status === 401 || e.status === 403
+              ? "Your session expired or you don't have access. Please sign in again."
+              : `Request failed (${e.status} ${e.statusText})`,
+          );
+        }
+        throw e;
+      }
+    },
+    retry: false,
+    throwOnError: true,
   });
   const clientsQ = useQuery({
     queryKey: ["admin-clients"],
