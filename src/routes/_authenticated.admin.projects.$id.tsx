@@ -18,7 +18,45 @@ import { StrategyPanel } from "@/components/strategy-panel";
 
 export const Route = createFileRoute("/_authenticated/admin/projects/$id")({
   component: AdminProjectDetail,
+  errorComponent: ProjectDetailError,
+  notFoundComponent: () => (
+    <div className="py-12 text-center">
+      <p className="text-sm text-muted-foreground mb-4">Project not found.</p>
+      <Link to="/admin/projects" className="text-xs tracking-[0.3em] uppercase text-accent">
+        ← Back to projects
+      </Link>
+    </div>
+  ),
 });
+
+function ProjectDetailError({ error, reset }: { error: Error; reset: () => void }) {
+  const router = useRouter();
+  const message =
+    error instanceof Response
+      ? `${error.status} ${error.statusText}`
+      : error?.message || "Something went wrong loading this project.";
+  return (
+    <div className="py-12 text-center space-y-4">
+      <h2 className="text-lg font-display">Couldn't load project</h2>
+      <p className="text-sm text-muted-foreground">{message}</p>
+      <div className="flex justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
+          className="text-xs tracking-[0.3em] uppercase border border-accent px-4 py-2 hover:bg-accent hover:text-accent-foreground"
+        >
+          Try again
+        </button>
+        <Link to="/admin/projects" className="text-xs tracking-[0.3em] uppercase border border-border px-4 py-2 hover:bg-muted">
+          Back to projects
+        </Link>
+      </div>
+    </div>
+  );
+}
 
 function AdminProjectDetail() {
   const { id } = Route.useParams();
