@@ -42,9 +42,9 @@ export function StrategyPanel({
         {canEdit && !editing && (
           <button
             onClick={() => setEditing(true)}
-            className="text-xs tracking-[0.3em] uppercase border border-accent/40 px-4 py-2 hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="text-xs tracking-[0.3em] uppercase bg-accent text-accent-foreground px-4 py-2 hover:bg-accent/90 transition-colors"
           >
-            {strategy ? "Edit" : "+ Add strategy"}
+            {strategy ? "Edit strategy" : "+ Add strategy"}
           </button>
         )}
       </div>
