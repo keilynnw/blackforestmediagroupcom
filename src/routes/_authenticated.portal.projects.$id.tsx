@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/portal/projects/$id")({
 
 function ProjectDetail() {
   const { id } = Route.useParams();
-  const { userId } = useAuth();
+  const { userId, isAdmin } = useAuth();
   const qc = useQueryClient();
   const fetchDetail = useServerFn(getProjectDetail);
   const sendMsg = useServerFn(sendMessage);
@@ -136,7 +136,7 @@ function ProjectDetail() {
       </nav>
 
       {tab === "strategy" && (
-        <StrategyPanel projectId={id} strategy={project.strategy ?? null} canEdit={false} />
+        <StrategyPanel projectId={id} strategy={project.strategy ?? null} canEdit={isAdmin} />
       )}
 
       {tab === "calendar" && <ContentCalendar projectId={id} />}
