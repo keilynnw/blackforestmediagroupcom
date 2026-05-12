@@ -8,6 +8,18 @@ export function SiteHeader({ hideLogo = false }: { hideLogo?: boolean }) {
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50">
+      <div className="bg-accent text-accent-foreground text-[10px] md:text-xs tracking-[0.25em] uppercase">
+        <div className="mx-auto max-w-7xl px-6 py-2 flex items-center justify-end">
+          <a
+            href="https://blackforest-photography.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-primary transition-colors"
+          >
+            Visit Black Forest Photography →
+          </a>
+        </div>
+      </div>
       <div className="mx-auto max-w-7xl px-6 pt-6 grid grid-cols-3 items-center gap-6">
         <nav className="hidden md:flex items-center gap-10 text-xs tracking-[0.25em] uppercase text-foreground/80 justify-self-start">
           <Link to="/" activeProps={{ className: "text-accent" }}>Home</Link>
