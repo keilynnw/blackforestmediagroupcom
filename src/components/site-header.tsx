@@ -1,7 +1,11 @@
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 export function SiteHeader({ hideLogo = false }: { hideLogo?: boolean }) {
+  const [open, setOpen] = useState(false);
+
   return (
     <header className="absolute top-0 left-0 right-0 z-50">
       <div className="mx-auto max-w-7xl px-6 pt-6 grid grid-cols-3 items-center gap-6">
@@ -29,7 +33,36 @@ export function SiteHeader({ hideLogo = false }: { hideLogo?: boolean }) {
             Book a Call
           </Link>
         </div>
+
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Toggle menu"
+          className="md:hidden justify-self-end col-start-3 text-foreground/80 hover:text-accent"
+        >
+          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
       </div>
+
+      {/* Mobile menu panel */}
+      {open && (
+        <div className="md:hidden mx-4 mt-4 border border-border/40 bg-background/95 backdrop-blur-md">
+          <nav className="flex flex-col text-xs tracking-[0.25em] uppercase text-foreground/80">
+            <Link onClick={() => setOpen(false)} to="/" className="px-6 py-4 border-b border-border/30 hover:text-accent">Home</Link>
+            <Link onClick={() => setOpen(false)} to="/services" className="px-6 py-4 border-b border-border/30 hover:text-accent">Services</Link>
+            <Link onClick={() => setOpen(false)} to="/about" className="px-6 py-4 border-b border-border/30 hover:text-accent">About</Link>
+            <Link onClick={() => setOpen(false)} to="/contact" className="px-6 py-4 border-b border-border/30 hover:text-accent">Contact</Link>
+            <Link onClick={() => setOpen(false)} to="/portal" className="px-6 py-4 border-b border-border/30 text-accent">Client Login</Link>
+            <Link
+              onClick={() => setOpen(false)}
+              to="/contact"
+              className="px-6 py-4 text-accent-foreground bg-accent text-center"
+            >
+              Book a Call
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
