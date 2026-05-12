@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useRef, useState } from "react";
@@ -18,7 +18,45 @@ import { StrategyPanel } from "@/components/strategy-panel";
 
 export const Route = createFileRoute("/_authenticated/admin/projects/$id")({
   component: AdminProjectDetail,
+  errorComponent: ProjectDetailError,
+  notFoundComponent: () => (
+    <div className="py-12 text-center">
+      <p className="text-sm text-muted-foreground mb-4">Project not found.</p>
+      <Link to="/admin/projects" className="text-xs tracking-[0.3em] uppercase text-accent">
+        ← Back to projects
+      </Link>
+    </div>
+  ),
 });
+
+function ProjectDetailError({ error, reset }: { error: Error; reset: () => void }) {
+  const router = useRouter();
+  const message =
+    error instanceof Response
+      ? `${error.status} ${error.statusText}`
+      : error?.message || "Something went wrong loading this project.";
+  return (
+    <div className="py-12 text-center space-y-4">
+      <h2 className="text-lg font-display">Couldn't load project</h2>
+      <p className="text-sm text-muted-foreground">{message}</p>
+      <div className="flex justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
+          className="text-xs tracking-[0.3em] uppercase border border-accent px-4 py-2 hover:bg-accent hover:text-accent-foreground"
+        >
+          Try again
+        </button>
+        <Link to="/admin/projects" className="text-xs tracking-[0.3em] uppercase border border-border px-4 py-2 hover:bg-muted">
+          Back to projects
+        </Link>
+      </div>
+    </div>
+  );
+}
 
 function AdminProjectDetail() {
   const { id } = Route.useParams();
@@ -34,7 +72,22 @@ function AdminProjectDetail() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["project", id],
-    queryFn: () => fetchDetail({ data: { id } }),
+    queryFn: async () => {
+      try {
+        return await fetchDetail({ data: { id } });
+      } catch (e) {
+        if (e instanceof Response) {
+          throw new Error(
+            e.status === 401 || e.status === 403
+              ? "Your session expired or you don't have access. Please sign in again."
+              : `Request failed (${e.status} ${e.statusText})`,
+          );
+        }
+        throw e;
+      }
+    },
+    retry: false,
+    throwOnError: true,
   });
   const clientsQ = useQuery({
     queryKey: ["admin-clients"],
