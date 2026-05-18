@@ -12,6 +12,7 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { ContentCalendar } from "@/components/content-calendar";
+import { ProjectNotes } from "@/components/project-notes";
 import { StrategyPanel } from "@/components/strategy-panel";
 
 export const Route = createFileRoute("/_authenticated/portal/projects/$id")({
@@ -36,7 +37,7 @@ function ProjectDetail() {
   const [body, setBody] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
-  const [tab, setTab] = useState<"strategy" | "calendar" | "files" | "messages">("strategy");
+  const [tab, setTab] = useState<"strategy" | "calendar" | "notes" | "files" | "messages">("strategy");
 
   const sendMut = useMutation({
     mutationFn: () => sendMsg({ data: { projectId: id, body } }),
@@ -117,6 +118,7 @@ function ProjectDetail() {
           [
             ["strategy", "Strategy"],
             ["calendar", "Calendar"],
+            ["notes", "Notes"],
             ["files", "Files"],
             ["messages", "Messages"],
           ] as const
@@ -140,6 +142,8 @@ function ProjectDetail() {
       )}
 
       {tab === "calendar" && <ContentCalendar projectId={id} />}
+
+      {tab === "notes" && <ProjectNotes projectId={id} />}
 
       {tab === "files" && (
         <section>
