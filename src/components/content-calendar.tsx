@@ -616,6 +616,32 @@ function EntryDialog({
           )}
         </div>
 
+        <label className="flex items-center gap-2 cursor-pointer select-none pt-1">
+          <input
+            type="checkbox"
+            checked={approved}
+            onChange={(e) => setApproved(e.target.checked)}
+            className="h-4 w-4 accent-emerald-500"
+          />
+          <span className="text-xs tracking-[0.3em] uppercase text-muted-foreground">
+            Approved
+          </span>
+          {approved && <span className="text-emerald-500 text-xs">✓</span>}
+        </label>
+
+        <label className="block space-y-1">
+          <span className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
+            Comments
+          </span>
+          <textarea
+            value={comments}
+            onChange={(e) => setComments(e.target.value)}
+            rows={3}
+            placeholder="Feedback, change requests, sign-off notes…"
+            className="w-full bg-transparent border border-border px-3 py-2 text-sm focus:outline-none focus:border-accent resize-none"
+          />
+        </label>
+
         <div className="flex items-center justify-between pt-2">
           {onDelete ? (
             <button
@@ -648,6 +674,8 @@ function EntryDialog({
                   attachment_name: attachmentName,
                   attachment_type: attachmentType,
                   attachment_size: attachmentSize,
+                  approved,
+                  comments: comments.trim() || null,
                 })
               }
               className="bg-accent text-accent-foreground px-6 py-2 text-xs tracking-[0.3em] uppercase hover:bg-accent/90 disabled:opacity-60"
