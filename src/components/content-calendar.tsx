@@ -24,6 +24,8 @@ type Entry = {
   attachment_name: string | null;
   attachment_type: string | null;
   attachment_size: number | null;
+  approved: boolean;
+  comments: string | null;
 };
 
 const STATUSES: Entry["status"][] = ["idea", "scheduled", "published"];
