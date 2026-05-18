@@ -78,6 +78,8 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
       attachmentName?: string | null;
       attachmentType?: string | null;
       attachmentSize?: number | null;
+      approved?: boolean;
+      comments?: string | null;
     }) => create({ data: { projectId, ...vars } }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey });
@@ -100,6 +102,8 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
           attachmentName: vars.attachment_name,
           attachmentType: vars.attachment_type,
           attachmentSize: vars.attachment_size,
+          approved: vars.approved,
+          comments: vars.comments,
         },
       }),
 
