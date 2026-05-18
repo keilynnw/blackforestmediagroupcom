@@ -678,3 +678,71 @@ export const getCalendarAttachmentUrl = createServerFn({ method: "POST" })
     return { url: signed.signedUrl };
   });
 
+
+// ===== Project Notes =====
+export const listProjectNotes = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ projectId: z.string().uuid() }))
+  .handler(async ({ data, context }) => {
+    const { data: notes, error } = await context.supabase
+      .from("project_notes")
+      .select("*")
+      .eq("project_id", data.projectId)
+      .order("updated_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return notes ?? [];
+  });
+
+export const createProjectNote = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    z.object({
+      projectId: z.string().uuid(),
+      title: z.string().trim().min(1).max(200),
+      body: z.string().trim().max(20000).optional().nullable(),
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("project_notes")
+      .insert({
+        project_id: data.projectId,
+        title: data.title,
+        body: data.body ?? null,
+        created_by: context.userId,
+      })
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const updateProjectNote = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    z.object({
+      id: z.string().uuid(),
+      title: z.string().trim().min(1).max(200),
+      body: z.string().trim().max(20000).optional().nullable(),
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("project_notes")
+      .update({ title: data.title, body: data.body ?? null })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const deleteProjectNote = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ id: z.string().uuid() }))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("project_notes")
+      .delete()
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
