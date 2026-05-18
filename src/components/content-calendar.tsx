@@ -300,6 +300,7 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
 
       {(creatingDate || editing) && (
         <EntryDialog
+          projectId={projectId}
           initial={
             editing ?? {
               id: "",
@@ -309,6 +310,10 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
               notes: "",
               platform: "",
               status: "idea",
+              attachment_path: null,
+              attachment_name: null,
+              attachment_type: null,
+              attachment_size: null,
             }
           }
           isNew={!editing}
@@ -328,12 +333,17 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
                 notes: v.notes ?? undefined,
                 platform: v.platform ?? undefined,
                 status: v.status,
+                attachmentPath: v.attachment_path ?? undefined,
+                attachmentName: v.attachment_name ?? undefined,
+                attachmentType: v.attachment_type ?? undefined,
+                attachmentSize: v.attachment_size ?? undefined,
               });
             }
           }}
           onDelete={editing ? () => deleteMut.mutate(editing.id) : undefined}
         />
       )}
+
     </section>
   );
 }
