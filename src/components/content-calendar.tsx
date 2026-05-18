@@ -50,6 +50,9 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
   const [creatingDate, setCreatingDate] = useState<string | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverDate, setDragOverDate] = useState<string | null>(null);
+  const [showOnlyApproved, setShowOnlyApproved] = useState(false);
+  const [showOnlyWithComments, setShowOnlyWithComments] = useState(false);
+
 
 
   const list = useServerFn(listCalendarEntries);
