@@ -249,6 +249,8 @@ function AdminProjectDetail() {
 
       {tab === "calendar" && <ContentCalendar projectId={id} />}
 
+      {tab === "notes" && <ProjectNotes projectId={id} />}
+
       {tab === "files" && (
         <section>
           <div className="flex items-center justify-between mb-4">
