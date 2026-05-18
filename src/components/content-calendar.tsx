@@ -24,6 +24,8 @@ type Entry = {
   attachment_name: string | null;
   attachment_type: string | null;
   attachment_size: number | null;
+  approved: boolean;
+  comments: string | null;
 };
 
 const STATUSES: Entry["status"][] = ["idea", "scheduled", "published"];
@@ -76,6 +78,8 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
       attachmentName?: string | null;
       attachmentType?: string | null;
       attachmentSize?: number | null;
+      approved?: boolean;
+      comments?: string | null;
     }) => create({ data: { projectId, ...vars } }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey });
@@ -98,6 +102,8 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
           attachmentName: vars.attachment_name,
           attachmentType: vars.attachment_type,
           attachmentSize: vars.attachment_size,
+          approved: vars.approved,
+          comments: vars.comments,
         },
       }),
 
@@ -298,6 +304,16 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
                         ▶
                       </span>
                     )}
+                    {e.approved && (
+                      <span className="text-emerald-500 mr-1" title="Approved">
+                        ✓
+                      </span>
+                    )}
+                    {e.comments && (
+                      <span className="text-muted-foreground mr-1" title="Has comments">
+                        💬
+                      </span>
+                    )}
                     {e.title}
                   </button>
                 ))}
@@ -328,6 +344,8 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
               attachment_name: null,
               attachment_type: null,
               attachment_size: null,
+              approved: false,
+              comments: null,
             }
           }
           isNew={!editing}
@@ -351,6 +369,8 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
                 attachmentName: v.attachment_name ?? undefined,
                 attachmentType: v.attachment_type ?? undefined,
                 attachmentSize: v.attachment_size ?? undefined,
+                approved: v.approved,
+                comments: v.comments ?? undefined,
               });
             }
           }}
@@ -401,6 +421,8 @@ function EntryDialog({
   const [attachmentName, setAttachmentName] = useState<string | null>(initial.attachment_name);
   const [attachmentType, setAttachmentType] = useState<string | null>(initial.attachment_type);
   const [attachmentSize, setAttachmentSize] = useState<number | null>(initial.attachment_size);
+  const [approved, setApproved] = useState<boolean>(initial.approved);
+  const [comments, setComments] = useState<string>(initial.comments ?? "");
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -594,6 +616,32 @@ function EntryDialog({
           )}
         </div>
 
+        <label className="flex items-center gap-2 cursor-pointer select-none pt-1">
+          <input
+            type="checkbox"
+            checked={approved}
+            onChange={(e) => setApproved(e.target.checked)}
+            className="h-4 w-4 accent-emerald-500"
+          />
+          <span className="text-xs tracking-[0.3em] uppercase text-muted-foreground">
+            Approved
+          </span>
+          {approved && <span className="text-emerald-500 text-xs">✓</span>}
+        </label>
+
+        <label className="block space-y-1">
+          <span className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
+            Comments
+          </span>
+          <textarea
+            value={comments}
+            onChange={(e) => setComments(e.target.value)}
+            rows={3}
+            placeholder="Feedback, change requests, sign-off notes…"
+            className="w-full bg-transparent border border-border px-3 py-2 text-sm focus:outline-none focus:border-accent resize-none"
+          />
+        </label>
+
         <div className="flex items-center justify-between pt-2">
           {onDelete ? (
             <button
@@ -626,6 +674,8 @@ function EntryDialog({
                   attachment_name: attachmentName,
                   attachment_type: attachmentType,
                   attachment_size: attachmentSize,
+                  approved,
+                  comments: comments.trim() || null,
                 })
               }
               className="bg-accent text-accent-foreground px-6 py-2 text-xs tracking-[0.3em] uppercase hover:bg-accent/90 disabled:opacity-60"
