@@ -39,6 +39,9 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
   const [cursor, setCursor] = useState(() => startOfMonth(new Date()));
   const [editing, setEditing] = useState<Entry | null>(null);
   const [creatingDate, setCreatingDate] = useState<string | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOverDate, setDragOverDate] = useState<string | null>(null);
+
 
   const list = useServerFn(listCalendarEntries);
   const create = useServerFn(createCalendarEntry);
@@ -97,6 +100,46 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
     },
     onError: (e: any) => toast.error(e?.message ?? "Could not delete"),
   });
+
+  const moveMut = useMutation({
+    mutationFn: (vars: { entry: Entry; newDate: string }) =>
+      update({
+        data: {
+          id: vars.entry.id,
+          scheduledDate: vars.newDate,
+          title: vars.entry.title,
+          notes: vars.entry.notes,
+          platform: vars.entry.platform,
+          status: vars.entry.status,
+        },
+      }),
+    onMutate: async (vars) => {
+      await qc.cancelQueries({ queryKey });
+      const prev = qc.getQueryData<Entry[]>(queryKey);
+      qc.setQueryData<Entry[]>(queryKey, (old = []) =>
+        old.map((e) =>
+          e.id === vars.entry.id ? { ...e, scheduled_date: vars.newDate } : e,
+        ),
+      );
+      return { prev };
+    },
+    onError: (e: any, _v, ctx) => {
+      if (ctx?.prev) qc.setQueryData(queryKey, ctx.prev);
+      toast.error(e?.message ?? "Could not move entry");
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey }),
+  });
+
+  function handleDrop(targetDate: string) {
+    const id = draggingId;
+    setDraggingId(null);
+    setDragOverDate(null);
+    if (!id) return;
+    const entry = entries.find((e) => e.id === id);
+    if (!entry || entry.scheduled_date === targetDate) return;
+    moveMut.mutate({ entry, newDate: targetDate });
+  }
+
 
   // Build day grid (Mon-first)
   const grid = useMemo(() => {
@@ -177,9 +220,23 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
           return (
             <div
               key={i}
-              className={`bg-background min-h-[110px] p-1.5 flex flex-col ${
+              onDragOver={(ev) => {
+                if (!inMonth || !draggingId) return;
+                ev.preventDefault();
+                ev.dataTransfer.dropEffect = "move";
+                if (dragOverDate !== key) setDragOverDate(key);
+              }}
+              onDragLeave={() => {
+                if (dragOverDate === key) setDragOverDate(null);
+              }}
+              onDrop={(ev) => {
+                if (!inMonth) return;
+                ev.preventDefault();
+                handleDrop(key);
+              }}
+              className={`bg-background min-h-[110px] p-1.5 flex flex-col transition-colors ${
                 inMonth ? "" : "opacity-40"
-              }`}
+              } ${dragOverDate === key && draggingId ? "ring-1 ring-accent ring-inset bg-accent/5" : ""}`}
             >
               <div className="flex items-center justify-between mb-1">
                 <span
@@ -202,8 +259,18 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
                   <button
                     key={e.id}
                     onClick={() => setEditing(e)}
-                    className={`w-full text-left text-[11px] px-1.5 py-1 truncate border-l-2 ${statusBar(e.status)} bg-muted/30 hover:bg-muted/60`}
-                    title={e.title}
+                    draggable
+                    onDragStart={(ev) => {
+                      setDraggingId(e.id);
+                      ev.dataTransfer.effectAllowed = "move";
+                      ev.dataTransfer.setData("text/plain", e.id);
+                    }}
+                    onDragEnd={() => {
+                      setDraggingId(null);
+                      setDragOverDate(null);
+                    }}
+                    className={`w-full text-left text-[11px] px-1.5 py-1 truncate border-l-2 ${statusBar(e.status)} bg-muted/30 hover:bg-muted/60 cursor-grab active:cursor-grabbing ${draggingId === e.id ? "opacity-50" : ""}`}
+                    title={`${e.title} — drag to move`}
                   >
                     {e.platform && (
                       <span className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground mr-1">
@@ -217,6 +284,7 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
             </div>
           );
         })}
+
       </div>
 
       {isLoading && (
