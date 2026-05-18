@@ -6,7 +6,10 @@ import {
   createCalendarEntry,
   updateCalendarEntry,
   deleteCalendarEntry,
+  createSignedUploadUrl,
+  getCalendarAttachmentUrl,
 } from "@/lib/portal.functions";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 type Entry = {
@@ -17,6 +20,10 @@ type Entry = {
   notes: string | null;
   platform: string | null;
   status: "idea" | "scheduled" | "published";
+  attachment_path: string | null;
+  attachment_name: string | null;
+  attachment_type: string | null;
+  attachment_size: number | null;
 };
 
 const STATUSES: Entry["status"][] = ["idea", "scheduled", "published"];
