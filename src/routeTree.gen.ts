@@ -30,6 +30,7 @@ import { Route as AuthenticatedAdminProjectsIndexRouteImport } from './routes/_a
 import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
+import { Route as ApiPublicCalendarTokenDoticsRouteImport } from './routes/api/public/calendar.$token[.]ics'
 import { Route as AuthenticatedPortalProjectsIdRouteImport } from './routes/_authenticated.portal.projects.$id'
 import { Route as AuthenticatedAdminProjectsIdRouteImport } from './routes/_authenticated.admin.projects.$id'
 
@@ -144,6 +145,12 @@ const LovableEmailQueueProcessRoute =
     path: '/lovable/email/queue/process',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicCalendarTokenDoticsRoute =
+  ApiPublicCalendarTokenDoticsRouteImport.update({
+    id: '/api/public/calendar/$token.ics',
+    path: '/api/public/calendar/$token.ics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedPortalProjectsIdRoute =
   AuthenticatedPortalProjectsIdRouteImport.update({
     id: '/portal/projects/$id',
@@ -176,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/portal/': typeof AuthenticatedPortalIndexRoute
   '/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/portal/projects/$id': typeof AuthenticatedPortalProjectsIdRoute
+  '/api/public/calendar/$token.ics': typeof ApiPublicCalendarTokenDoticsRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
@@ -199,6 +207,7 @@ export interface FileRoutesByTo {
   '/portal': typeof AuthenticatedPortalIndexRoute
   '/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/portal/projects/$id': typeof AuthenticatedPortalProjectsIdRoute
+  '/api/public/calendar/$token.ics': typeof ApiPublicCalendarTokenDoticsRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
@@ -225,6 +234,7 @@ export interface FileRoutesById {
   '/_authenticated/portal/': typeof AuthenticatedPortalIndexRoute
   '/_authenticated/admin/projects/$id': typeof AuthenticatedAdminProjectsIdRoute
   '/_authenticated/portal/projects/$id': typeof AuthenticatedPortalProjectsIdRoute
+  '/api/public/calendar/$token.ics': typeof ApiPublicCalendarTokenDoticsRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
@@ -251,6 +261,7 @@ export interface FileRouteTypes {
     | '/portal/'
     | '/admin/projects/$id'
     | '/portal/projects/$id'
+    | '/api/public/calendar/$token.ics'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/admin/projects/$id'
     | '/portal/projects/$id'
+    | '/api/public/calendar/$token.ics'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
@@ -299,6 +311,7 @@ export interface FileRouteTypes {
     | '/_authenticated/portal/'
     | '/_authenticated/admin/projects/$id'
     | '/_authenticated/portal/projects/$id'
+    | '/api/public/calendar/$token.ics'
     | '/lovable/email/queue/process'
     | '/lovable/email/transactional/preview'
     | '/lovable/email/transactional/send'
@@ -318,6 +331,7 @@ export interface RootRouteChildren {
   PortalResetPasswordRoute: typeof PortalResetPasswordRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
+  ApiPublicCalendarTokenDoticsRoute: typeof ApiPublicCalendarTokenDoticsRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
   LovableEmailTransactionalSendRoute: typeof LovableEmailTransactionalSendRoute
@@ -472,6 +486,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/calendar/$token.ics': {
+      id: '/api/public/calendar/$token.ics'
+      path: '/api/public/calendar/$token.ics'
+      fullPath: '/api/public/calendar/$token.ics'
+      preLoaderRoute: typeof ApiPublicCalendarTokenDoticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/portal/projects/$id': {
       id: '/_authenticated/portal/projects/$id'
       path: '/portal/projects/$id'
@@ -536,6 +557,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortalResetPasswordRoute: PortalResetPasswordRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
+  ApiPublicCalendarTokenDoticsRoute: ApiPublicCalendarTokenDoticsRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
   LovableEmailTransactionalSendRoute: LovableEmailTransactionalSendRoute,

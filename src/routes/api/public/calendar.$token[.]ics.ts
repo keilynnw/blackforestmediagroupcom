@@ -36,7 +36,7 @@ export const Route = createFileRoute("/api/public/calendar/$token.ics")({
   server: {
     handlers: {
       GET: async ({ params }) => {
-        const token = params.token;
+        const token = (params as Record<string, string>)["token.ics"] ?? (params as Record<string, string>).token;
         if (!token || token.length < 16) {
           return new Response("Not found", { status: 404 });
         }
