@@ -264,7 +264,12 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
         ))}
         {grid.map(({ date, inMonth }, i) => {
           const key = fmtDate(date);
-          const day = byDay.get(key) ?? [];
+          const rawDay = byDay.get(key) ?? [];
+          const day = rawDay.filter((e) => {
+            if (showOnlyApproved && !e.approved) return false;
+            if (showOnlyWithComments && !e.comments) return false;
+            return true;
+          });
           const isToday = key === fmtDate(new Date());
           return (
             <div
