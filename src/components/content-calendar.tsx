@@ -293,6 +293,11 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
                         {e.platform}
                       </span>
                     )}
+                    {e.attachment_path && (
+                      <span className="text-accent mr-1" title="Has attachment">
+                        ▶
+                      </span>
+                    )}
                     {e.title}
                   </button>
                 ))}
