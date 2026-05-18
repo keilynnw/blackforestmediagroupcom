@@ -6,7 +6,10 @@ import {
   createCalendarEntry,
   updateCalendarEntry,
   deleteCalendarEntry,
+  createSignedUploadUrl,
+  getCalendarAttachmentUrl,
 } from "@/lib/portal.functions";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 type Entry = {
@@ -17,6 +20,10 @@ type Entry = {
   notes: string | null;
   platform: string | null;
   status: "idea" | "scheduled" | "published";
+  attachment_path: string | null;
+  attachment_name: string | null;
+  attachment_type: string | null;
+  attachment_size: number | null;
 };
 
 const STATUSES: Entry["status"][] = ["idea", "scheduled", "published"];
@@ -65,6 +72,10 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
       notes?: string;
       platform?: string;
       status?: Entry["status"];
+      attachmentPath?: string | null;
+      attachmentName?: string | null;
+      attachmentType?: string | null;
+      attachmentSize?: number | null;
     }) => create({ data: { projectId, ...vars } }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey });
@@ -83,8 +94,13 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
           notes: vars.notes,
           platform: vars.platform,
           status: vars.status,
+          attachmentPath: vars.attachment_path,
+          attachmentName: vars.attachment_name,
+          attachmentType: vars.attachment_type,
+          attachmentSize: vars.attachment_size,
         },
       }),
+
     onSuccess: () => {
       qc.invalidateQueries({ queryKey });
       setEditing(null);
@@ -277,6 +293,11 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
                         {e.platform}
                       </span>
                     )}
+                    {e.attachment_path && (
+                      <span className="text-accent mr-1" title="Has attachment">
+                        ▶
+                      </span>
+                    )}
                     {e.title}
                   </button>
                 ))}
@@ -293,6 +314,7 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
 
       {(creatingDate || editing) && (
         <EntryDialog
+          projectId={projectId}
           initial={
             editing ?? {
               id: "",
@@ -302,6 +324,10 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
               notes: "",
               platform: "",
               status: "idea",
+              attachment_path: null,
+              attachment_name: null,
+              attachment_type: null,
+              attachment_size: null,
             }
           }
           isNew={!editing}
@@ -321,12 +347,17 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
                 notes: v.notes ?? undefined,
                 platform: v.platform ?? undefined,
                 status: v.status,
+                attachmentPath: v.attachment_path ?? undefined,
+                attachmentName: v.attachment_name ?? undefined,
+                attachmentType: v.attachment_type ?? undefined,
+                attachmentSize: v.attachment_size ?? undefined,
               });
             }
           }}
           onDelete={editing ? () => deleteMut.mutate(editing.id) : undefined}
         />
       )}
+
     </section>
   );
 }
@@ -343,6 +374,7 @@ function statusBar(s: Entry["status"]) {
 }
 
 function EntryDialog({
+  projectId,
   initial,
   isNew,
   saving,
@@ -351,6 +383,7 @@ function EntryDialog({
   onSave,
   onDelete,
 }: {
+  projectId: string;
   initial: Entry;
   isNew: boolean;
   saving: boolean;
@@ -364,14 +397,74 @@ function EntryDialog({
   const [platform, setPlatform] = useState(initial.platform ?? "");
   const [status, setStatus] = useState<Entry["status"]>(initial.status);
   const [date, setDate] = useState(initial.scheduled_date);
+  const [attachmentPath, setAttachmentPath] = useState<string | null>(initial.attachment_path);
+  const [attachmentName, setAttachmentName] = useState<string | null>(initial.attachment_name);
+  const [attachmentType, setAttachmentType] = useState<string | null>(initial.attachment_type);
+  const [attachmentSize, setAttachmentSize] = useState<number | null>(initial.attachment_size);
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const getUploadUrl = useServerFn(createSignedUploadUrl);
+  const getDownloadUrl = useServerFn(getCalendarAttachmentUrl);
+
+  async function handleFile(file: File) {
+    if (!file) return;
+    // 200 MB cap for video uploads
+    const MAX = 200 * 1024 * 1024;
+    if (file.size > MAX) {
+      toast.error("File is too large (max 200 MB)");
+      return;
+    }
+    setUploading(true);
+    setProgress(0);
+    try {
+      const { path, token } = await getUploadUrl({
+        data: { projectId, filename: file.name },
+      });
+      const { error } = await supabase.storage
+        .from("client-files")
+        .uploadToSignedUrl(path, token, file, {
+          contentType: file.type || "application/octet-stream",
+          upsert: false,
+        });
+      if (error) throw error;
+      setAttachmentPath(path);
+      setAttachmentName(file.name);
+      setAttachmentType(file.type || null);
+      setAttachmentSize(file.size);
+      setProgress(100);
+      toast.success("Attachment uploaded");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function openAttachment() {
+    if (!initial.id || !attachmentPath) return;
+    try {
+      const { url } = await getDownloadUrl({ data: { entryId: initial.id } });
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Could not open attachment");
+    }
+  }
+
+  function removeAttachment() {
+    setAttachmentPath(null);
+    setAttachmentName(null);
+    setAttachmentType(null);
+    setAttachmentSize(null);
+  }
 
   return (
     <div
-      className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto"
       onClick={onClose}
     >
       <div
-        className="bg-background border border-border max-w-lg w-full p-6 space-y-4"
+        className="bg-background border border-border max-w-lg w-full p-6 space-y-4 my-8"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
@@ -450,6 +543,57 @@ function EntryDialog({
           />
         </label>
 
+        <div className="space-y-2">
+          <span className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
+            Attachment
+          </span>
+          {attachmentPath ? (
+            <div className="flex items-center justify-between gap-3 border border-border px-3 py-2 text-sm">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-accent">▶</span>
+                <button
+                  type="button"
+                  onClick={openAttachment}
+                  disabled={!initial.id}
+                  className="truncate text-left hover:underline disabled:no-underline disabled:opacity-70"
+                  title={initial.id ? "Open attachment" : "Save entry to preview"}
+                >
+                  {attachmentName ?? "attachment"}
+                </button>
+                {attachmentSize != null && (
+                  <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                    {formatBytes(attachmentSize)}
+                  </span>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={removeAttachment}
+                className="text-[10px] tracking-[0.3em] uppercase text-destructive hover:underline"
+              >
+                Remove
+              </button>
+            </div>
+          ) : (
+            <label className="block border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground hover:border-accent cursor-pointer">
+              <input
+                type="file"
+                accept="video/*,image/*,application/pdf"
+                className="hidden"
+                disabled={uploading}
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleFile(f);
+                  e.target.value = "";
+                }}
+              />
+              {uploading
+                ? `Uploading… ${progress}%`
+                : "Click to upload a video, image, or PDF (max 200 MB)"}
+            </label>
+          )}
+        </div>
+
         <div className="flex items-center justify-between pt-2">
           {onDelete ? (
             <button
@@ -470,7 +614,7 @@ function EntryDialog({
               Cancel
             </button>
             <button
-              disabled={saving || !title.trim() || !date}
+              disabled={saving || uploading || !title.trim() || !date}
               onClick={() =>
                 onSave({
                   title: title.trim(),
@@ -478,6 +622,10 @@ function EntryDialog({
                   platform: platform.trim() || null,
                   status,
                   scheduled_date: date,
+                  attachment_path: attachmentPath,
+                  attachment_name: attachmentName,
+                  attachment_type: attachmentType,
+                  attachment_size: attachmentSize,
                 })
               }
               className="bg-accent text-accent-foreground px-6 py-2 text-xs tracking-[0.3em] uppercase hover:bg-accent/90 disabled:opacity-60"
@@ -490,3 +638,11 @@ function EntryDialog({
     </div>
   );
 }
+
+function formatBytes(n: number) {
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+  if (n < 1024 * 1024 * 1024) return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+  return `${(n / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+}
+

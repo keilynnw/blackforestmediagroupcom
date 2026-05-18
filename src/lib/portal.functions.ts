@@ -563,6 +563,10 @@ export const createCalendarEntry = createServerFn({ method: "POST" })
       notes: z.string().max(4000).optional().nullable(),
       platform: z.string().max(80).optional().nullable(),
       status: CalendarStatus.optional(),
+      attachmentPath: z.string().max(500).optional().nullable(),
+      attachmentName: z.string().max(255).optional().nullable(),
+      attachmentType: z.string().max(100).optional().nullable(),
+      attachmentSize: z.number().int().nonnegative().optional().nullable(),
     }),
   )
   .handler(async ({ data, context }) => {
@@ -577,6 +581,10 @@ export const createCalendarEntry = createServerFn({ method: "POST" })
         platform: data.platform ?? null,
         status: data.status ?? "idea",
         created_by: userId,
+        attachment_path: data.attachmentPath ?? null,
+        attachment_name: data.attachmentName ?? null,
+        attachment_type: data.attachmentType ?? null,
+        attachment_size: data.attachmentSize ?? null,
       })
       .select()
       .single();
@@ -594,6 +602,10 @@ export const updateCalendarEntry = createServerFn({ method: "POST" })
       notes: z.string().max(4000).optional().nullable(),
       platform: z.string().max(80).optional().nullable(),
       status: CalendarStatus.optional(),
+      attachmentPath: z.string().max(500).optional().nullable(),
+      attachmentName: z.string().max(255).optional().nullable(),
+      attachmentType: z.string().max(100).optional().nullable(),
+      attachmentSize: z.number().int().nonnegative().optional().nullable(),
     }),
   )
   .handler(async ({ data, context }) => {
@@ -603,6 +615,10 @@ export const updateCalendarEntry = createServerFn({ method: "POST" })
     if (data.notes !== undefined) patch.notes = data.notes;
     if (data.platform !== undefined) patch.platform = data.platform;
     if (data.status !== undefined) patch.status = data.status;
+    if (data.attachmentPath !== undefined) patch.attachment_path = data.attachmentPath;
+    if (data.attachmentName !== undefined) patch.attachment_name = data.attachmentName;
+    if (data.attachmentType !== undefined) patch.attachment_type = data.attachmentType;
+    if (data.attachmentSize !== undefined) patch.attachment_size = data.attachmentSize;
     const { data: row, error } = await context.supabase
       .from("content_calendar_entries")
       .update(patch)
@@ -617,10 +633,40 @@ export const deleteCalendarEntry = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data, context }) => {
+    // Best-effort cleanup of attachment in storage
+    const { data: existing } = await context.supabase
+      .from("content_calendar_entries")
+      .select("attachment_path")
+      .eq("id", data.id)
+      .maybeSingle();
+    const path = (existing as any)?.attachment_path as string | null | undefined;
     const { error } = await context.supabase
       .from("content_calendar_entries")
       .delete()
       .eq("id", data.id);
     if (error) throw new Error(error.message);
+    if (path) {
+      await supabaseAdmin.storage.from("client-files").remove([path]).catch(() => {});
+    }
     return { ok: true };
   });
+
+export const getCalendarAttachmentUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ entryId: z.string().uuid() }))
+  .handler(async ({ data, context }) => {
+    const { data: entry, error } = await context.supabase
+      .from("content_calendar_entries")
+      .select("attachment_path")
+      .eq("id", data.entryId)
+      .maybeSingle();
+    if (error || !entry || !(entry as any).attachment_path) {
+      throw new Error("Not found");
+    }
+    const { data: signed, error: sErr } = await supabaseAdmin.storage
+      .from("client-files")
+      .createSignedUrl((entry as any).attachment_path, 60 * 10);
+    if (sErr) throw new Error(sErr.message);
+    return { url: signed.signedUrl };
+  });
+
