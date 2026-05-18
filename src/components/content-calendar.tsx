@@ -334,6 +334,8 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
               attachment_name: null,
               attachment_type: null,
               attachment_size: null,
+              approved: false,
+              comments: null,
             }
           }
           isNew={!editing}
@@ -357,6 +359,8 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
                 attachmentName: v.attachment_name ?? undefined,
                 attachmentType: v.attachment_type ?? undefined,
                 attachmentSize: v.attachment_size ?? undefined,
+                approved: v.approved,
+                comments: v.comments ?? undefined,
               });
             }
           }}
