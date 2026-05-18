@@ -567,6 +567,8 @@ export const createCalendarEntry = createServerFn({ method: "POST" })
       attachmentName: z.string().max(255).optional().nullable(),
       attachmentType: z.string().max(100).optional().nullable(),
       attachmentSize: z.number().int().nonnegative().optional().nullable(),
+      approved: z.boolean().optional(),
+      comments: z.string().max(4000).optional().nullable(),
     }),
   )
   .handler(async ({ data, context }) => {
@@ -585,6 +587,8 @@ export const createCalendarEntry = createServerFn({ method: "POST" })
         attachment_name: data.attachmentName ?? null,
         attachment_type: data.attachmentType ?? null,
         attachment_size: data.attachmentSize ?? null,
+        approved: data.approved ?? false,
+        comments: data.comments ?? null,
       })
       .select()
       .single();
