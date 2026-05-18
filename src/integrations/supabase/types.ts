@@ -16,10 +16,12 @@ export type Database = {
     Tables: {
       content_calendar_entries: {
         Row: {
+          approved: boolean
           attachment_name: string | null
           attachment_path: string | null
           attachment_size: number | null
           attachment_type: string | null
+          comments: string | null
           created_at: string
           created_by: string | null
           id: string
@@ -32,10 +34,12 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          approved?: boolean
           attachment_name?: string | null
           attachment_path?: string | null
           attachment_size?: number | null
           attachment_type?: string | null
+          comments?: string | null
           created_at?: string
           created_by?: string | null
           id?: string
@@ -48,10 +52,12 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          approved?: boolean
           attachment_name?: string | null
           attachment_path?: string | null
           attachment_size?: number | null
           attachment_type?: string | null
+          comments?: string | null
           created_at?: string
           created_by?: string | null
           id?: string
