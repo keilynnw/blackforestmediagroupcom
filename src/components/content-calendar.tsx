@@ -293,7 +293,7 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
         </div>
       </div>
 
-      </div>
+
 
       {subscribeOpen && calendarToken && (
         <div className="mb-4 border border-accent/30 bg-accent/5 p-4 text-sm space-y-3">
