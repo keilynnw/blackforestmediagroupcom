@@ -293,6 +293,72 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
         </div>
       </div>
 
+      </div>
+
+      {subscribeOpen && calendarToken && (
+        <div className="mb-4 border border-accent/30 bg-accent/5 p-4 text-sm space-y-3">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs tracking-[0.3em] uppercase text-accent mb-1">
+                Sync to your calendar
+              </p>
+              <p className="text-muted-foreground text-xs">
+                Subscribe to this content calendar in Apple Calendar, Google
+                Calendar, Outlook or any app that supports iCal feeds. Updates
+                refresh automatically.
+              </p>
+            </div>
+            <button
+              onClick={() => setSubscribeOpen(false)}
+              className="text-muted-foreground hover:text-foreground text-xs"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-2">
+            <a
+              href={icsWebcalUrl}
+              className="border border-border px-3 py-2 hover:border-accent hover:text-accent text-xs tracking-[0.2em] uppercase text-center"
+            >
+              Add to Apple Calendar
+            </a>
+            <a
+              href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(icsHttpsUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-border px-3 py-2 hover:border-accent hover:text-accent text-xs tracking-[0.2em] uppercase text-center"
+            >
+              Add to Google Calendar
+            </a>
+          </div>
+
+          <div>
+            <label className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
+              Subscription URL
+            </label>
+            <div className="flex gap-2 mt-1">
+              <input
+                readOnly
+                value={icsHttpsUrl}
+                onFocus={(e) => e.currentTarget.select()}
+                className="flex-1 bg-background border border-border px-3 py-2 text-xs font-mono"
+              />
+              <button
+                onClick={copySubscribeUrl}
+                className="border border-border px-3 py-2 text-xs tracking-[0.2em] uppercase hover:border-accent hover:text-accent"
+              >
+                Copy
+              </button>
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-2">
+              Keep this link private — anyone with it can view this calendar.
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-7 gap-px bg-border/40 border border-border/40 text-xs">
         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
           <div
