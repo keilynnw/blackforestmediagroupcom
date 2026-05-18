@@ -610,6 +610,8 @@ export const updateCalendarEntry = createServerFn({ method: "POST" })
       attachmentName: z.string().max(255).optional().nullable(),
       attachmentType: z.string().max(100).optional().nullable(),
       attachmentSize: z.number().int().nonnegative().optional().nullable(),
+      approved: z.boolean().optional(),
+      comments: z.string().max(4000).optional().nullable(),
     }),
   )
   .handler(async ({ data, context }) => {
@@ -623,6 +625,8 @@ export const updateCalendarEntry = createServerFn({ method: "POST" })
     if (data.attachmentName !== undefined) patch.attachment_name = data.attachmentName;
     if (data.attachmentType !== undefined) patch.attachment_type = data.attachmentType;
     if (data.attachmentSize !== undefined) patch.attachment_size = data.attachmentSize;
+    if (data.approved !== undefined) patch.approved = data.approved;
+    if (data.comments !== undefined) patch.comments = data.comments;
     const { data: row, error } = await context.supabase
       .from("content_calendar_entries")
       .update(patch)
