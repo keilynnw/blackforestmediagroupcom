@@ -39,6 +39,9 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
   const [cursor, setCursor] = useState(() => startOfMonth(new Date()));
   const [editing, setEditing] = useState<Entry | null>(null);
   const [creatingDate, setCreatingDate] = useState<string | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOverDate, setDragOverDate] = useState<string | null>(null);
+
 
   const list = useServerFn(listCalendarEntries);
   const create = useServerFn(createCalendarEntry);
