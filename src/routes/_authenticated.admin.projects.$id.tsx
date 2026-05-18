@@ -97,7 +97,7 @@ function AdminProjectDetail() {
   const [body, setBody] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
-  const [tab, setTab] = useState<"strategy" | "calendar" | "files" | "messages">("strategy");
+  const [tab, setTab] = useState<"strategy" | "calendar" | "notes" | "files" | "messages">("strategy");
 
   const sendMut = useMutation({
     mutationFn: () => sendMsg({ data: { projectId: id, body } }),
