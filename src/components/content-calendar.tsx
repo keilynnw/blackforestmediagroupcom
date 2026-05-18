@@ -421,6 +421,8 @@ function EntryDialog({
   const [attachmentName, setAttachmentName] = useState<string | null>(initial.attachment_name);
   const [attachmentType, setAttachmentType] = useState<string | null>(initial.attachment_type);
   const [attachmentSize, setAttachmentSize] = useState<number | null>(initial.attachment_size);
+  const [approved, setApproved] = useState<boolean>(initial.approved);
+  const [comments, setComments] = useState<string>(initial.comments ?? "");
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
