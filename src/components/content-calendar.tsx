@@ -52,6 +52,38 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
   const [dragOverDate, setDragOverDate] = useState<string | null>(null);
   const [showOnlyApproved, setShowOnlyApproved] = useState(false);
   const [showOnlyWithComments, setShowOnlyWithComments] = useState(false);
+  const [subscribeOpen, setSubscribeOpen] = useState(false);
+  const [calendarToken, setCalendarToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    supabase
+      .from("projects")
+      .select("calendar_token")
+      .eq("id", projectId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!cancelled) setCalendarToken((data as any)?.calendar_token ?? null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId]);
+
+  const icsHttpsUrl = calendarToken
+    ? `${typeof window !== "undefined" ? window.location.origin : ""}/api/public/calendar/${calendarToken}.ics`
+    : "";
+  const icsWebcalUrl = calendarToken
+    ? `webcal://${typeof window !== "undefined" ? window.location.host : ""}/api/public/calendar/${calendarToken}.ics`
+    : "";
+
+  function copySubscribeUrl() {
+    if (!icsHttpsUrl) return;
+    navigator.clipboard.writeText(icsHttpsUrl).then(
+      () => toast.success("Subscribe link copied"),
+      () => toast.error("Could not copy"),
+    );
+  }
 
 
 
