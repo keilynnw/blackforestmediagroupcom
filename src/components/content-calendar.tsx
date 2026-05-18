@@ -304,6 +304,16 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
                         ▶
                       </span>
                     )}
+                    {e.approved && (
+                      <span className="text-emerald-500 mr-1" title="Approved">
+                        ✓
+                      </span>
+                    )}
+                    {e.comments && (
+                      <span className="text-muted-foreground mr-1" title="Has comments">
+                        💬
+                      </span>
+                    )}
                     {e.title}
                   </button>
                 ))}
