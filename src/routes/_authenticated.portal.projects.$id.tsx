@@ -118,6 +118,7 @@ function ProjectDetail() {
           [
             ["strategy", "Strategy"],
             ["calendar", "Calendar"],
+            ["notes", "Notes"],
             ["files", "Files"],
             ["messages", "Messages"],
           ] as const
