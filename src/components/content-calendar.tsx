@@ -261,6 +261,14 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
           >
             {showOnlyWithComments ? "💬 Comments" : "Comments"}
           </button>
+          <button
+            onClick={() => setSubscribeOpen((v) => !v)}
+            disabled={!calendarToken}
+            className="text-[10px] tracking-[0.2em] uppercase border border-accent/50 text-accent px-2 py-1 hover:bg-accent hover:text-accent-foreground transition-colors disabled:opacity-50"
+            title="Sync to Apple or Google Calendar"
+          >
+            Subscribe
+          </button>
           <div className="flex items-center gap-2">
             <button
               onClick={() =>
