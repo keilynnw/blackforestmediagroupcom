@@ -101,6 +101,46 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
     onError: (e: any) => toast.error(e?.message ?? "Could not delete"),
   });
 
+  const moveMut = useMutation({
+    mutationFn: (vars: { entry: Entry; newDate: string }) =>
+      update({
+        data: {
+          id: vars.entry.id,
+          scheduledDate: vars.newDate,
+          title: vars.entry.title,
+          notes: vars.entry.notes,
+          platform: vars.entry.platform,
+          status: vars.entry.status,
+        },
+      }),
+    onMutate: async (vars) => {
+      await qc.cancelQueries({ queryKey });
+      const prev = qc.getQueryData<Entry[]>(queryKey);
+      qc.setQueryData<Entry[]>(queryKey, (old = []) =>
+        old.map((e) =>
+          e.id === vars.entry.id ? { ...e, scheduled_date: vars.newDate } : e,
+        ),
+      );
+      return { prev };
+    },
+    onError: (e: any, _v, ctx) => {
+      if (ctx?.prev) qc.setQueryData(queryKey, ctx.prev);
+      toast.error(e?.message ?? "Could not move entry");
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey }),
+  });
+
+  function handleDrop(targetDate: string) {
+    const id = draggingId;
+    setDraggingId(null);
+    setDragOverDate(null);
+    if (!id) return;
+    const entry = entries.find((e) => e.id === id);
+    if (!entry || entry.scheduled_date === targetDate) return;
+    moveMut.mutate({ entry, newDate: targetDate });
+  }
+
+
   // Build day grid (Mon-first)
   const grid = useMemo(() => {
     const first = startOfMonth(cursor);
