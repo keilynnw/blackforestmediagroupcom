@@ -72,6 +72,10 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
       notes?: string;
       platform?: string;
       status?: Entry["status"];
+      attachmentPath?: string | null;
+      attachmentName?: string | null;
+      attachmentType?: string | null;
+      attachmentSize?: number | null;
     }) => create({ data: { projectId, ...vars } }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey });
@@ -90,8 +94,13 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
           notes: vars.notes,
           platform: vars.platform,
           status: vars.status,
+          attachmentPath: vars.attachment_path,
+          attachmentName: vars.attachment_name,
+          attachmentType: vars.attachment_type,
+          attachmentSize: vars.attachment_size,
         },
       }),
+
     onSuccess: () => {
       qc.invalidateQueries({ queryKey });
       setEditing(null);
