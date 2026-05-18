@@ -202,30 +202,54 @@ export function ContentCalendar({ projectId }: { projectId: string }) {
 
   return (
     <section>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
         <h2 className="text-xs tracking-[0.4em] uppercase text-muted-foreground">
           Content calendar
         </h2>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
-            onClick={() =>
-              setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))
-            }
-            className="text-xs tracking-[0.3em] uppercase border border-border px-3 py-1 hover:border-accent"
+            onClick={() => setShowOnlyApproved((v) => !v)}
+            className={`text-[10px] tracking-[0.2em] uppercase border px-2 py-1 transition-colors ${
+              showOnlyApproved
+                ? "border-emerald-500 text-emerald-500 bg-emerald-500/10"
+                : "border-border text-muted-foreground hover:border-accent"
+            }`}
+            title="Toggle approved only"
           >
-            ←
+            {showOnlyApproved ? "✓ Approved" : "Approved"}
           </button>
-          <span className="text-xs tracking-[0.3em] uppercase text-accent min-w-[10rem] text-center">
-            {monthLabel}
-          </span>
           <button
-            onClick={() =>
-              setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))
-            }
-            className="text-xs tracking-[0.3em] uppercase border border-border px-3 py-1 hover:border-accent"
+            onClick={() => setShowOnlyWithComments((v) => !v)}
+            className={`text-[10px] tracking-[0.2em] uppercase border px-2 py-1 transition-colors ${
+              showOnlyWithComments
+                ? "border-accent text-accent bg-accent/10"
+                : "border-border text-muted-foreground hover:border-accent"
+            }`}
+            title="Toggle with comments only"
           >
-            →
+            {showOnlyWithComments ? "💬 Comments" : "Comments"}
           </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() =>
+                setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))
+              }
+              className="text-xs tracking-[0.3em] uppercase border border-border px-3 py-1 hover:border-accent"
+            >
+              ←
+            </button>
+            <span className="text-xs tracking-[0.3em] uppercase text-accent min-w-[10rem] text-center">
+              {monthLabel}
+            </span>
+            <button
+              onClick={() =>
+                setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))
+              }
+              className="text-xs tracking-[0.3em] uppercase border border-border px-3 py-1 hover:border-accent"
+            >
+              →
+            </button>
+          </div>
         </div>
       </div>
 
