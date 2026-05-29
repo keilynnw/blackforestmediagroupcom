@@ -24,6 +24,14 @@ export function SiteHeader({ hideLogo = false }: { hideLogo?: boolean }) {
         <nav className="hidden md:flex items-center gap-10 text-xs tracking-[0.25em] uppercase text-foreground/80 justify-self-start">
           <Link to="/" activeProps={{ className: "text-accent" }}>Home</Link>
           <Link to="/services" activeProps={{ className: "text-accent" }}>Services</Link>
+          <a
+            href="https://www.blackforest-photography.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent transition-colors"
+          >
+            Photography
+          </a>
         </nav>
         <Link to="/" className="flex items-center justify-self-center col-start-2">
           {!hideLogo && (
@@ -62,6 +70,15 @@ export function SiteHeader({ hideLogo = false }: { hideLogo?: boolean }) {
           <nav className="flex flex-col text-xs tracking-[0.25em] uppercase text-foreground/80">
             <Link onClick={() => setOpen(false)} to="/" className="px-6 py-4 border-b border-border/30 hover:text-accent">Home</Link>
             <Link onClick={() => setOpen(false)} to="/services" className="px-6 py-4 border-b border-border/30 hover:text-accent">Services</Link>
+            <a
+              href="https://www.blackforest-photography.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="px-6 py-4 border-b border-border/30 hover:text-accent"
+            >
+              Photography
+            </a>
             <Link onClick={() => setOpen(false)} to="/about" className="px-6 py-4 border-b border-border/30 hover:text-accent">About</Link>
             <Link onClick={() => setOpen(false)} to="/contact" className="px-6 py-4 border-b border-border/30 hover:text-accent">Contact</Link>
             <Link onClick={() => setOpen(false)} to="/portal" className="px-6 py-4 border-b border-border/30 text-accent">Client Login</Link>
