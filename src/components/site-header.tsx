@@ -25,7 +25,7 @@ export function SiteHeader({ hideLogo = false }: { hideLogo?: boolean }) {
           <Link to="/" activeProps={{ className: "text-accent" }}>Home</Link>
           <Link to="/services" activeProps={{ className: "text-accent" }}>Services</Link>
           <a
-            href="https://www.blackforest-photography.com"
+            href="https://blackforest-photography.com"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-accent transition-colors"
@@ -71,7 +71,7 @@ export function SiteHeader({ hideLogo = false }: { hideLogo?: boolean }) {
             <Link onClick={() => setOpen(false)} to="/" className="px-6 py-4 border-b border-border/30 hover:text-accent">Home</Link>
             <Link onClick={() => setOpen(false)} to="/services" className="px-6 py-4 border-b border-border/30 hover:text-accent">Services</Link>
             <a
-              href="https://www.blackforest-photography.com"
+              href="https://blackforest-photography.com"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
