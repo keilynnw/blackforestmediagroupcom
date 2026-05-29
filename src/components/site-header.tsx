@@ -24,6 +24,14 @@ export function SiteHeader({ hideLogo = false }: { hideLogo?: boolean }) {
         <nav className="hidden md:flex items-center gap-10 text-xs tracking-[0.25em] uppercase text-foreground/80 justify-self-start">
           <Link to="/" activeProps={{ className: "text-accent" }}>Home</Link>
           <Link to="/services" activeProps={{ className: "text-accent" }}>Services</Link>
+          <a
+            href="https://www.blackforest-photography.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent transition-colors"
+          >
+            Photography
+          </a>
         </nav>
         <Link to="/" className="flex items-center justify-self-center col-start-2">
           {!hideLogo && (
