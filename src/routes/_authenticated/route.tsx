@@ -1,31 +1,61 @@
-// Auto-injected by the Supabase integration when this file does not exist.
-//
-// Pathless layout route that gates every child under `src/routes/_authenticated/`
-// behind a signed-in Supabase user. The subtree is client-rendered (`ssr: false`)
-// because Supabase stores the session in `localStorage`, which the server cannot
-// read. Trying to gate this subtree server-side produces redirect loops or
-// false sign-out flashes on hard refresh.
-//
-// Public pages and `/auth` continue to SSR normally — they do not import this
-// layout and are not affected.
-//
-// Data fetching inside this subtree should call `createServerFn`s protected by
-// `requireSupabaseAuth`. The browser attaches the bearer token automatically
-// via `attachSupabaseAuth`, which is registered as `functionMiddleware` in
-// `src/start.ts` (auto-wired by the integration).
-//
-// Edit freely. This file is only re-injected when deleted entirely.
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-import { supabase } from '@/integrations/supabase/client'
+import { createFileRoute, Outlet, redirect, Link, useRouter } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 
-export const Route = createFileRoute('/_authenticated')({
+export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async ({ location }) => {
-    const { data, error } = await supabase.auth.getUser()
+    const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
-      throw redirect({ to: '/portal/login', search: { redirect: location.href } })
+      throw redirect({
+        to: "/portal/login",
+        search: { redirect: location.href },
+      });
     }
-    return { user: data.user }
+    return { user: data.user };
   },
-  component: () => <Outlet />,
-})
+  component: AuthLayout,
+});
+
+function AuthLayout() {
+  const { isAdmin, signOut, loading } = useAuth();
+  const router = useRouter();
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="border-b border-border/40">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <Link to="/portal" className="font-display text-lg sm:text-xl text-accent">
+            Black Forest <span className="font-script text-primary">Portal</span>
+          </Link>
+          <nav className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-6 text-[11px] sm:text-xs tracking-[0.2em] uppercase">
+            <Link to="/portal" activeOptions={{ exact: true }} activeProps={{ className: "text-accent" }} className="text-foreground/70 hover:text-foreground">
+              My Projects
+            </Link>
+            <Link to="/portal/settings" activeProps={{ className: "text-accent" }} className="text-foreground/70 hover:text-foreground">
+              Settings
+            </Link>
+            {isAdmin && (
+              <Link to="/admin" activeProps={{ className: "text-accent" }} className="text-foreground/70 hover:text-foreground">
+                Admin
+              </Link>
+            )}
+            <button
+              onClick={async () => {
+                await signOut();
+                router.navigate({ to: "/portal/login" });
+              }}
+              disabled={loading}
+              className="text-foreground/70 hover:text-foreground"
+            >
+              Sign out
+            </button>
+          </nav>
+        </div>
+      </header>
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+        <Outlet />
+      </main>
+    </div>
+  );
+}
