@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { ContentCalendar } from "@/components/content-calendar";
 import { ProjectNotes } from "@/components/project-notes";
 import { StrategyPanel } from "@/components/strategy-panel";
+import { IntakeFormPanel } from "@/components/intake-form-panel";
 
 export const Route = createFileRoute("/_authenticated/admin/projects/$id")({
   component: AdminProjectDetail,
