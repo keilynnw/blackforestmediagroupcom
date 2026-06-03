@@ -376,6 +376,34 @@ export const updateProject = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const markIntakeSubmitted = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ projectId: z.string().uuid() }))
+  .handler(async ({ data, context }) => {
+    const { userId } = context;
+    // verify caller is admin or the project's client
+    const { data: project } = await supabaseAdmin
+      .from("projects")
+      .select("id, client_id")
+      .eq("id", data.projectId)
+      .maybeSingle();
+    if (!project) throw new Error("Project not found");
+    const { data: roles } = await supabaseAdmin
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId);
+    const isAdmin = (roles ?? []).some((r: any) => r.role === "admin");
+    if (!isAdmin && (project as any).client_id !== userId) {
+      throw new Error("Forbidden");
+    }
+    const { error } = await supabaseAdmin
+      .from("projects")
+      .update({ intake_submitted_at: new Date().toISOString() })
+      .eq("id", data.projectId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 export const getProjectDetail = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ id: z.string().uuid() }))
