@@ -143,6 +143,14 @@ function ProjectDetail() {
         <StrategyPanel projectId={id} strategy={project.strategy ?? null} canEdit={isAdmin} />
       )}
 
+      {tab === "intake" && (
+        <IntakeFormPanel
+          projectId={id}
+          submittedAt={(project as any).intake_submitted_at ?? null}
+          isAdmin={isAdmin}
+        />
+      )}
+
       {tab === "calendar" && <ContentCalendar projectId={id} />}
 
       {tab === "notes" && <ProjectNotes projectId={id} />}
