@@ -332,6 +332,7 @@ export type Database = {
           created_by: string | null
           description: string | null
           id: string
+          intake_submitted_at: string | null
           status: Database["public"]["Enums"]["project_status"]
           strategy: string | null
           title: string
@@ -344,6 +345,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           id?: string
+          intake_submitted_at?: string | null
           status?: Database["public"]["Enums"]["project_status"]
           strategy?: string | null
           title: string
@@ -356,6 +358,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           id?: string
+          intake_submitted_at?: string | null
           status?: Database["public"]["Enums"]["project_status"]
           strategy?: string | null
           title?: string
