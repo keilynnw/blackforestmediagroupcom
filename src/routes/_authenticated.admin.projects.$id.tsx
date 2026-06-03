@@ -225,6 +225,7 @@ function AdminProjectDetail() {
         {(
           [
             ["strategy", "Strategy"],
+            ["intake", "Intake Form"],
             ["calendar", "Calendar"],
             ["notes", "Notes"],
             ["files", "Files"],
