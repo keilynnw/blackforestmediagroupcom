@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { ContentCalendar } from "@/components/content-calendar";
 import { ProjectNotes } from "@/components/project-notes";
 import { StrategyPanel } from "@/components/strategy-panel";
+import { IntakeFormPanel } from "@/components/intake-form-panel";
 
 export const Route = createFileRoute("/_authenticated/portal/projects/$id")({
   component: ProjectDetail,
@@ -37,7 +38,7 @@ function ProjectDetail() {
   const [body, setBody] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
-  const [tab, setTab] = useState<"strategy" | "calendar" | "notes" | "files" | "messages">("strategy");
+  const [tab, setTab] = useState<"strategy" | "intake" | "calendar" | "notes" | "files" | "messages">("strategy");
 
   const sendMut = useMutation({
     mutationFn: () => sendMsg({ data: { projectId: id, body } }),
@@ -117,6 +118,7 @@ function ProjectDetail() {
         {(
           [
             ["strategy", "Strategy"],
+            ["intake", "Intake Form"],
             ["calendar", "Calendar"],
             ["notes", "Notes"],
             ["files", "Files"],
@@ -139,6 +141,14 @@ function ProjectDetail() {
 
       {tab === "strategy" && (
         <StrategyPanel projectId={id} strategy={project.strategy ?? null} canEdit={isAdmin} />
+      )}
+
+      {tab === "intake" && (
+        <IntakeFormPanel
+          projectId={id}
+          submittedAt={(project as any).intake_submitted_at ?? null}
+          isAdmin={isAdmin}
+        />
       )}
 
       {tab === "calendar" && <ContentCalendar projectId={id} />}
