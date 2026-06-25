@@ -30,6 +30,16 @@ function ProjectDetail() {
   const createUrl = useServerFn(createSignedUploadUrl);
   const register = useServerFn(registerAsset);
   const download = useServerFn(getAssetDownloadUrl);
+  const del = useServerFn(deleteAsset);
+
+  const deleteMut = useMutation({
+    mutationFn: (assetId: string) => del({ data: { assetId } }),
+    onSuccess: () => {
+      toast.success("File deleted");
+      qc.invalidateQueries({ queryKey: ["project", id] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not delete"),
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: ["project", id],
