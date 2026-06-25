@@ -557,6 +557,30 @@ export const getAssetDownloadUrl = createServerFn({ method: "POST" })
     return { url: signed.signedUrl };
   });
 
+export const deleteAsset = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ assetId: z.string().uuid() }))
+  .handler(async ({ data, context }) => {
+    const { data: asset, error } = await context.supabase
+      .from("project_assets")
+      .select("id, storage_path, project_id")
+      .eq("id", data.assetId)
+      .maybeSingle();
+    if (error || !asset) throw new Error("Not found");
+    const { error: sErr } = await supabaseAdmin.storage
+      .from("client-files")
+      .remove([(asset as any).storage_path]);
+    if (sErr) throw new Error(sErr.message);
+    const { error: dErr } = await context.supabase
+      .from("project_assets")
+      .delete()
+      .eq("id", data.assetId);
+    if (dErr) throw new Error(dErr.message);
+    return { ok: true };
+  });
+
+
+
 // ===== Content Calendar =====
 const CalendarStatus = z.enum(["idea", "scheduled", "published"]);
 
