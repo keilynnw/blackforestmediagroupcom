@@ -8,6 +8,7 @@ import {
   createSignedUploadUrl,
   registerAsset,
   getAssetDownloadUrl,
+  deleteAsset,
   updateProject,
   listClients,
 } from "@/lib/portal.functions";
@@ -69,6 +70,7 @@ function AdminProjectDetail() {
   const createUrl = useServerFn(createSignedUploadUrl);
   const register = useServerFn(registerAsset);
   const download = useServerFn(getAssetDownloadUrl);
+  const del = useServerFn(deleteAsset);
   const update = useServerFn(updateProject);
   const fetchClients = useServerFn(listClients);
 
@@ -130,6 +132,17 @@ function AdminProjectDetail() {
     },
     onError: (e: any) => toast.error(e?.message ?? "Could not update client"),
   });
+
+  const deleteMut = useMutation({
+    mutationFn: (assetId: string) => del({ data: { assetId } }),
+    onSuccess: () => {
+      toast.success("File deleted");
+      qc.invalidateQueries({ queryKey: ["project", id] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not delete"),
+  });
+
+
 
   async function handleFile(file: File) {
     setUploading(true);
@@ -294,12 +307,25 @@ function AdminProjectDetail() {
                       {" · "}{new Date(a.created_at).toLocaleDateString()}
                     </p>
                   </div>
-                  <button
-                    onClick={() => handleDownload(a.id)}
-                    className="text-xs tracking-[0.3em] uppercase text-accent hover:underline"
-                  >
-                    Download
-                  </button>
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => handleDownload(a.id)}
+                      className="text-xs tracking-[0.3em] uppercase text-accent hover:underline"
+                    >
+                      Download
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm("Delete this file? This cannot be undone.")) {
+                          deleteMut.mutate(a.id);
+                        }
+                      }}
+                      disabled={deleteMut.isPending}
+                      className="text-xs tracking-[0.3em] uppercase text-destructive hover:underline disabled:opacity-50"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
