@@ -70,6 +70,7 @@ function AdminProjectDetail() {
   const createUrl = useServerFn(createSignedUploadUrl);
   const register = useServerFn(registerAsset);
   const download = useServerFn(getAssetDownloadUrl);
+  const del = useServerFn(deleteAsset);
   const update = useServerFn(updateProject);
   const fetchClients = useServerFn(listClients);
 
