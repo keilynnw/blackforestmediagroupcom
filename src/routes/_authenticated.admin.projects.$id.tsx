@@ -8,6 +8,7 @@ import {
   createSignedUploadUrl,
   registerAsset,
   getAssetDownloadUrl,
+  deleteAsset,
   updateProject,
   listClients,
 } from "@/lib/portal.functions";
