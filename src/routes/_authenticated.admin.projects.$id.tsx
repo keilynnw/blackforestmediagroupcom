@@ -133,6 +133,17 @@ function AdminProjectDetail() {
     onError: (e: any) => toast.error(e?.message ?? "Could not update client"),
   });
 
+  const deleteMut = useMutation({
+    mutationFn: (assetId: string) => del({ data: { assetId } }),
+    onSuccess: () => {
+      toast.success("File deleted");
+      qc.invalidateQueries({ queryKey: ["project", id] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not delete"),
+  });
+
+
+
   async function handleFile(file: File) {
     setUploading(true);
     try {
