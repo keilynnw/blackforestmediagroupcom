@@ -198,12 +198,25 @@ function ProjectDetail() {
                       {" · "}{new Date(a.created_at).toLocaleDateString()}
                     </p>
                   </div>
-                  <button
-                    onClick={() => handleDownload(a.id)}
-                    className="text-xs tracking-[0.3em] uppercase text-accent hover:underline"
-                  >
-                    Download
-                  </button>
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => handleDownload(a.id)}
+                      className="text-xs tracking-[0.3em] uppercase text-accent hover:underline"
+                    >
+                      Download
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm("Delete this file? This cannot be undone.")) {
+                          deleteMut.mutate(a.id);
+                        }
+                      }}
+                      disabled={deleteMut.isPending}
+                      className="text-xs tracking-[0.3em] uppercase text-destructive hover:underline disabled:opacity-50"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
