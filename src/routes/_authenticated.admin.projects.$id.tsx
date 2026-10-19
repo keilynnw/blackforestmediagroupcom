@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_authenticated/admin/projects/$id")({
   ),
 });
 
-function ProjectDetailError({ error, reset }: { error: Error; reset: () => void }) {
+function ProjectDetailError({ error, reset }: import("@tanstack/react-router").ErrorComponentProps) {
   const router = useRouter();
   const message =
     error instanceof Response
