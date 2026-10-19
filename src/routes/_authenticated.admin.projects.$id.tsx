@@ -37,7 +37,7 @@ function ProjectDetailError({ error, reset }: import("@tanstack/react-router").E
   const message =
     error instanceof Response
       ? `${error.status} ${error.statusText}`
-      : error?.message || "Something went wrong loading this project.";
+      : (error as Error)?.message || "Something went wrong loading this project.";
   return (
     <div className="py-12 text-center space-y-4">
       <h2 className="text-lg font-display">Couldn't load project</h2>
