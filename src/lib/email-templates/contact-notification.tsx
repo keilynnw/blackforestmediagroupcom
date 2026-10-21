@@ -52,7 +52,7 @@ export const template = {
   subject: (data: Record<string, any>) =>
     `New inquiry from ${data?.name || 'website visitor'}`,
   displayName: 'Contact form notification',
-  to: 'notify@blackforestmediagroup.com',
+  to: 'photos@blackforestmediagroup.com',
   previewData: {
     name: 'Jane Doe',
     email: 'jane@example.com',
