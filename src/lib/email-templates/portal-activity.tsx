@@ -67,7 +67,7 @@ export const template = {
       ? `New file uploaded — ${data?.projectTitle ?? 'Client portal'}`
       : `New message — ${data?.projectTitle ?? 'Client portal'}`,
   displayName: 'Client portal activity',
-  to: 'notify@blackforestmediagroup.com',
+  to: 'photos@blackforestmediagroup.com',
   previewData: {
     kind: 'message',
     projectTitle: 'Acme Brand Refresh',
